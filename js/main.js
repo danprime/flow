@@ -103,8 +103,7 @@ app.factory('dataServices', function(){
 			return myFlows;
 		},
 		save: function(flows)
-		{
-			console.log("Saving...");
+		{	
 			myFlows = flows;
 			localStorage.setItem("flows", JSON.stringify(myFlows));
 		},
