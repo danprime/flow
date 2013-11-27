@@ -180,8 +180,6 @@ function stageViewCtrl($scope, $location, dataServices, idservice) {
 		newBox.fields = $scope.newFields;
 		
 		$scope.crm.push(newBox);
-		console.log(newBox);
-		
 	}
 }
 
@@ -275,8 +273,7 @@ function settingsCtrl($scope, $location, dataServices, idservice) {
 	}
 	$scope.addNewStage = function(stage)
 	{
-		stage.stageId = idservice.gen()
-		console.log("Stage Id:" + stage.stageId);
+		stage.stageId = idservice.gen();
 		$scope.currentPipeline.pipeline.stages.push(stage);
 		$scope.newStage = "";
 	}
@@ -293,19 +290,28 @@ function settingsCtrl($scope, $location, dataServices, idservice) {
 	
 	$scope.createNewFlow = function(newFlowName)
 	{
-		var newPipeline = new Object();		
-		newPipeLine = {"name":"Sales", "id":"1", "pipeline":{
-	    "stages":[{"stageId":"1", "stageName":"Lead", "stageColour":"yellow"}, {"stageName":"Contacted", "stageColour":"orange"}, {"stageName":"Pitched", "stageColour":"red"}, {"stageName":"Sold", "stageColour":"green"}],
-	        "fields":[{"fieldName":"a", "fieldType":"text", "display":"no"}, 
-	                    {"fieldName":"b", "fieldType":"number", "display":"no"}
-	                    ,{"fieldName":"c", "fieldType":"text", "display":"no"}
-	                    ,{"fieldName":"d", "fieldType":"number", "display":"yes"}],
-	        "crm":[{"contactid":"1", "field1":"val1", "field2":"val2", "stageId":"stage1"},{"contactid":"2", "field1":"val1", "field2":"val2", "stageId":"stage1"}]}}
-	;
-		newPipeLine.name = newFlowName;
+		var newPipeLine = new Object();		
+//		newPipeLine = {"name":"Sales", "id":"1", "pipeline":{
+//	    "stages":[{"stageId":"1", "stageName":"Lead", "stageColour":"yellow"}, {"stageName":"Contacted", "stageColour":"orange"}, {"stageName":"Pitched", "stageColour":"red"}, {"stageName":"Sold", "stageColour":"green"}],
+//	        "fields":[{"fieldName":"a", "fieldType":"text", "display":"no"}, 
+//	                    {"fieldName":"b", "fieldType":"number", "display":"no"}
+//	                    ,{"fieldName":"c", "fieldType":"text", "display":"no"}
+//	                    ,{"fieldName":"d", "fieldType":"number", "display":"yes"}],
+//	        "crm":[{"contactid":"1", "field1":"val1", "field2":"val2", "stageId":"stage1"},{"contactid":"2", "field1":"val1", "field2":"val2", "stageId":"stage1"}]}}
+//	;
+		newPipeLine.name = $scope.newFlowName;
 		newPipeLine.id = idservice.gen();
+		newPipeLine.pipeline = new Object();
+		newPipeLine.pipeline.stages = new Array();
+		newPipeLine.pipeline.fields = new Array();
+		newPipeLine.pipeline.crm = new Array();		
 		
-		$scope.pipelines.push(newPipeline);
+		$scope.pipelines.push(newPipeLine);
+		
+		$scope.newFlowName = "";
+		
+		$scope.selectedPipeline = newPipeLine;
+		$scope.switchPipeline();
 	}
 	
 	$scope.addField = function(targetField)
