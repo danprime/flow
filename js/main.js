@@ -154,6 +154,11 @@ function stageViewCtrl($scope, $location, dataServices) {
 		dataServices.setCurrentBoxId(boxID);
 		$location.path('/personview/' + boxID);
 	}
+	
+	$scope.gotoStages = function()
+	{
+		$location.path('/stages');
+	}
 }
 
 function personViewCtrl($scope, $location, dataServices) {

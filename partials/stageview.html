@@ -10,7 +10,7 @@
 	border:1px solid black;
 }
 </style>
-<button id="stageViewBackButton">&lt; Stages</button>
+<button id="stageViewBackButton" ng-Click="gotoStages()">&lt; Stages</button>
 <table id="stageview" width="100%">
 <tr><th>Stage</th>
 <th ng-Repeat="field in fields | filter:{display:'yes'}">
