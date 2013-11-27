@@ -189,6 +189,14 @@ function stageViewCtrl($scope, $location, dataServices, idservice) {
 		
 	$scope.visibleFieldIndexes = new Array();
 	
+	$scope.refreshStageCount = function ()
+	{
+		angular.forEach($scope.stages, function(stage, key){
+			
+			crms = _.where( $scope.flow.pipeline.crm, {stageId:stage.stageId});
+			stage.count = crms.length;
+		});
+	}
 	//DOC: Get the the visible indexes for filtering.
 	angular.forEach($scope.fields, function(field, key){
 		if (field.display  == "yes")
@@ -197,11 +205,21 @@ function stageViewCtrl($scope, $location, dataServices, idservice) {
 		}
 	});
 	
+	$scope.refreshStageCount();
+	
+	
 	$scope.openBox = function(boxID)
 	{
 		dataServices.save($scope.pipelines);
 		dataServices.setCurrentBoxId(boxID);
 		$location.path('/personview/' + boxID);
+	}
+	
+	$scope.viewStage = function(stageid)
+	{
+		dataServices.save($scope.pipelines);
+		dataServices.setCurrentStageId(stageid);
+		$location.path('/stageview/' + stageid);
 	}
 	
 	$scope.gotoStages = function()

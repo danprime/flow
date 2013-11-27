@@ -9,12 +9,35 @@
 #stageview th{
 	border:1px solid black;
 }
+#stagesviewquicktbl {
+	border:0px;width:100%;
+}
+
+#stagesviewquicktbl td {
+	cell-padding:0px;
+	padding:0px;
+	margin:0px;
+}
+
+#stagesviewquicktbl button {
+	width:100%;
+	height:100%;
+	padding:0px;
+	margin:0px;
+	color:#eee;
+	margin-bottom:10px;
+}
 </style>
 
 <button id="stageViewBackButton" ng-Click="gotoStages()">&lt; {{flow.name}}</button>
 <br />
+<table id="stagesviewquicktbl">
+<tr>
+	<td ng-repeat="stage in stages"><button style="height:{{stageBoxHeight}}px; background-color:{{stage.stageColour}}" ng-Click="viewStage(stage.stageId)"><span style="font-size:2em;">{{stage.count}}</span><br/>{{stage.stageName}}</button></td>
+</tr>
+</table>
 <br />
-<br />
+
 <table id="stageview" width="100%">
 <tr><th>Stage</th>
 <th ng-Repeat="field in fields | filter:{display:'yes'}">
