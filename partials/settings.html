@@ -11,9 +11,59 @@ Switch to a Different Flow
 <h3>Stages</h3>
 <table>
 	<tr><td>Stage Name</td><td>Color</td><td>Actions</td></tr>
-	<tr ng-repeat="stage in currentPipeline.pipeline.stages"><td><span ng-Hide="stage.editName" ng-Click="stage.editName=true">{{stage.stageName}}</span><span ng-Show="stage.editName"><input type="text" ng-Model="stage.stageName" ng-Blur="stage.editName=false"/></span></td><td>{{stage.stageColour}}</td><td><button ng-Click="changeOrder(stage,1)">D</button><button ng-Click="changeOrder(stage,-1)">U</button><button ng-Click="deleteStage(stage)">T</button></td></tr>
-	<tr><td><input type="text" id="newStage.stageName" /></td><td>Grey</td><td><button>Add</button></td></tr>
+	<tr ng-repeat="stage in currentPipeline.pipeline.stages">
+				<td style="background:{{stage.stageColour}};color:white;">
+					<span ng-Hide="stage.editName" ng-Click="stage.editName=true" >{{stage.stageName}}</span>
+					<span ng-Show="stage.editName"><input type="text" ng-Model="stage.stageName" ng-Blur="stage.editName=false"/></span>
+				</td>
+				<td>
+					<select ng-Model="stage.stageColour">
+						<option ng-Repeat="colour in availableColours" value="{{colour}}" ng-Selected="colour == stage.stageColour">{{colour}}</option>
+					</select>
+				</td>
+				<td>
+					<button ng-Click="changeOrder(stage,1)">D</button>
+					<button ng-Click="changeOrder(stage,-1)">U</button>
+					<button ng-Click="deleteStage(stage)">T</button>
+				</td>
+	</tr>
+	
+	<tr><td><input type="text" ng-Model="newStage.stageName" /></td><td><select ng-Model="newStage.stageColour">
+						<option ng-Repeat="colour in availableColours" value="{{colour}}" ng-Selected="colour == stage.stageColour">{{colour}}</option>
+					</select></td><td><button ng-Click="addNewStage(newStage)">Add</button></td></tr>
 </table>
+<h3>Fields</h3>
+<table>
+<tr><td>Name</td><td>Type</td><td>Summary</td></tr>
+<tr ng-Repeat="field in currentPipeline.pipeline.fields">
+	<td>
+		<span ng-Hide="field.editName" ng-Click="field.editName=true" >{{field.fieldName}}</span>
+		<span ng-Show="field.editName"><input type="text" ng-Model="field.fieldName" ng-Blur="field.editName=false"/></span>
+	</td>
+	<td>
+		<select ng-Model="field.fieldType">
+			<option ng-Selected="field.fieldType=='text'">Text</option>
+			<option ng-Selected="field.fieldType=='number'">#</option>
+		</select>
+	</td>
+	<td>
+		<select ng-Model="field.display">
+			<option ng-Selected="field.display=='yes'">Y</option>
+			<option ng-Selected="field.display=='no'">N</option>
+		</select>
+	</td>
+	<td>
+		<button ng-Click="removeField(field)">T</button>
+	</td>
+</tr>
+<tr><td><input type="text" ng-Model="newField.fieldName" /></td><td>
+		<select ng-Model="newField.fieldType">
+			<option ng-Selected="field.fieldType=='text'">Text</option>
+			<option ng-Selected="field.fieldType=='number'">#</option>
+		</select>
+	</td><td><button ng-Click="addField(newField)">Add</button></td></tr>
+</table>
+
+
 <hr />
-<label>New Flow: <input type="text" id="newFlowName"></label><button>Add</button><br />
-{{pipelines[0].name}}
+<label>New Flow: <input type="text" id="newFlowName" ng-Model="newFlowName"></label><button ng-Click="createNewFlow(newFlowName)">Add</button><br />

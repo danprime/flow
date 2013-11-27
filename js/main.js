@@ -49,6 +49,7 @@ app.config(['$routeProvider', function($routeProvider) {
 	}]);
 
 function stagesCtrl($scope, $location) {
+	
 	$scope.pipeline = {"pipeline1":{
 	    "stages":[{"stageId":"1", "stageName":"Lead", "stageColour":"yellow"}, {"stageName":"Contacted", "stageColour":"orange"}, {"stageName":"Pitched", "stageColour":"red"}, {"stageName":"Sold", "stageColour":"green"}],
 	        "fields":[{"fieldName":"a", "fieldType":"text", "display":"yes/no"}, 
@@ -77,12 +78,14 @@ function personViewCtrl($scope, $location) {
 }
 
 function settingsCtrl($scope, $location) {
+	$scope.availableColours = Array('aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'yellow');
+		
 	$scope.pipelines = [{"name":"Sales", "id":"1", "pipeline":{
 	    "stages":[{"stageId":"1", "stageName":"Lead", "stageColour":"yellow"}, {"stageName":"Contacted", "stageColour":"orange"}, {"stageName":"Pitched", "stageColour":"red"}, {"stageName":"Sold", "stageColour":"green"}],
-	        "fields":[{"fieldName":"a", "fieldType":"text", "display":"yes/no"}, 
-	                    {"fieldName":"b", "fieldType":"number", "display":"yes/no"}
-	                    ,{"fieldName":"c", "fieldType":"text", "display":"yes/no"}
-	                    ,{"fieldName":"d", "fieldType":"number", "display":"yes/no"}],
+	        "fields":[{"fieldName":"a", "fieldType":"text", "display":"no"}, 
+	                    {"fieldName":"b", "fieldType":"number", "display":"no"}
+	                    ,{"fieldName":"c", "fieldType":"text", "display":"no"}
+	                    ,{"fieldName":"d", "fieldType":"number", "display":"yes"}],
 	        "crm":[{"contactid":"1", "field1":"val1", "field2":"val2", "stageId":"stage1"},{"contactid":"2", "field1":"val1", "field2":"val2", "stageId":"stage1"}]}}
 	,{"name":"Ideas", "id":"2", "pipeline":{
 	    "stages":[{"stageId":"1", "stageName":"Lead", "stageColour":"yellow"}, {"stageName":"Contacted", "stageColour":"orange"}, {"stageName":"Pitched", "stageColour":"red"}, {"stageName":"Sold", "stageColour":"green"}],
@@ -108,7 +111,6 @@ function settingsCtrl($scope, $location) {
 		if (angular.equals($scope.currentPipeline, $scope.selectedPipeline) == false)
 		{
 			$scope.currentPipeline = $scope.selectedPipeline;
-			console.log("Changed Pipeline!");
 		}
 	}
 	
@@ -117,6 +119,7 @@ function settingsCtrl($scope, $location) {
 		if ( newName.trim().length > 0)
 		{
 			$scope.currentPipeline.name = newName;
+			$scope.newNameForCurrentFlow = "";
 		}
 	}
 	
@@ -140,6 +143,12 @@ function settingsCtrl($scope, $location) {
 			$scope.currentPipeline.pipeline.stages[sourceIndex] = temp;
 		}
 	}
+	$scope.addNewStage = function(stage)
+	{
+		$scope.currentPipeline.pipeline.stages.push(stage);
+		$scope.newStage = "";
+	}
+
 	
 	$scope.deleteStage = function(stage)
 	{
@@ -149,4 +158,30 @@ function settingsCtrl($scope, $location) {
 			$scope.currentPipeline.pipeline.stages.splice(targetIndex, 1);
 		}
 	}
+	
+	$scope.createNewFlow = function(newFlowName)
+	{
+		var newPipeline = new Object();
+		newPipeline.name = newFlowName;
+		newPipeline.id = "";
+		newPipeline.pipelines = new Object();
+		newPipeline.pipelines.stages = Array();
+		
+		$scope.pipelines.push(newPipeline);
+	}
+	
+	$scope.addField = function(targetField)
+	{
+		$scope.currentPipeline.pipeline.fields.push(targetField);
+		$scope.newField = "";
+	}
+	$scope.removeField = function(targetField)
+	{
+		var targetIndex = $scope.currentPipeline.pipeline.fields.indexOf(targetField);
+		if (targetIndex != -1)
+		{
+			$scope.currentPipeline.pipeline.fields.splice(targetIndex, 1);
+		}
+	}
+	
 }
