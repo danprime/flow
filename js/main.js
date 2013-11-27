@@ -331,4 +331,20 @@ function settingsCtrl($scope, $location, dataServices, idservice) {
 	{
 		$location.path('/stages');
 	}
+	
+	$scope.deleteFlow = function()
+	{
+		if ($scope.currentPipeline == $scope.selectedPipeline)
+		{
+			var targetIndex = $scope.pipelines.indexOf($scope.currentPipeline);
+			if (targetIndex != -1)
+			{
+				$scope.pipelines.splice(targetIndex, 1);
+				
+				$scope.selectedPipeline = $scope.pipelines[0];
+				$scope.switchPipeline();
+				
+			}
+		}
+	}
 }
