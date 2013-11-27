@@ -13,13 +13,9 @@
 	width:100%;
 	padding:0px;
 	margin:0px;
+	font-size:2.5em;
 }
 </style>
 <table id="stagestbl">
-<tr><td><button class="stageButton">Stage 1</button></td></tr>
-<tr><td><button class="stageButton">Stage 1</button></td></tr>
-<tr><td><button class="stageButton">Stage 1</button></td></tr>
-<tr><td><button class="stageButton">Stage 1</button></td></tr>
-<tr><td><button class="stageButton">Stage 1</button></td></tr>
+<tr ng-repeat="stage in stages" height="{{stageBoxHeight}}"><td><button style="height:{{stageBoxHeight}}px;" ng-Click="viewStage(stage.stageId)">{{stage.stageName}}</button></td></tr>
 </table>
-{{message}}
