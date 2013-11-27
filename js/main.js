@@ -274,6 +274,12 @@ function settingsCtrl($scope, $location, dataServices, idservice) {
 	$scope.addNewStage = function(stage)
 	{
 		stage.stageId = idservice.gen();
+		
+		if (stage.stageColour == null)
+		{
+			//randomly pick a colour.
+			stage.stageColour = $scope.availableColours[Math.floor(Math.random() * $scope.availableColours.length)];
+		}
 		$scope.currentPipeline.pipeline.stages.push(stage);
 		$scope.newStage = "";
 	}
@@ -290,15 +296,7 @@ function settingsCtrl($scope, $location, dataServices, idservice) {
 	
 	$scope.createNewFlow = function(newFlowName)
 	{
-		var newPipeLine = new Object();		
-//		newPipeLine = {"name":"Sales", "id":"1", "pipeline":{
-//	    "stages":[{"stageId":"1", "stageName":"Lead", "stageColour":"yellow"}, {"stageName":"Contacted", "stageColour":"orange"}, {"stageName":"Pitched", "stageColour":"red"}, {"stageName":"Sold", "stageColour":"green"}],
-//	        "fields":[{"fieldName":"a", "fieldType":"text", "display":"no"}, 
-//	                    {"fieldName":"b", "fieldType":"number", "display":"no"}
-//	                    ,{"fieldName":"c", "fieldType":"text", "display":"no"}
-//	                    ,{"fieldName":"d", "fieldType":"number", "display":"yes"}],
-//	        "crm":[{"contactid":"1", "field1":"val1", "field2":"val2", "stageId":"stage1"},{"contactid":"2", "field1":"val1", "field2":"val2", "stageId":"stage1"}]}}
-//	;
+		var newPipeLine = new Object();
 		newPipeLine.name = $scope.newFlowName;
 		newPipeLine.id = idservice.gen();
 		newPipeLine.pipeline = new Object();
@@ -316,6 +314,7 @@ function settingsCtrl($scope, $location, dataServices, idservice) {
 	
 	$scope.addField = function(targetField)
 	{
+		targetField.display = "no";
 		$scope.currentPipeline.pipeline.fields.push(targetField);
 		$scope.newField = "";
 	}
