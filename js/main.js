@@ -37,15 +37,16 @@ app.factory('dataServices', function(){
         "fields":[{"fieldName":"Name", "fieldType":"text", "display":"yes"}, 
                     {"fieldName":"Amount", "fieldType":"number", "display":"yes"}
                     ,{"fieldName":"Notes", "fieldType":"text", "display":"no"}],
-        "crm":[{"contactid":"1", "field1":"val1", "field2":"val2", "stageId":"1"},{"contactid":"2", "field1":"val1", "field2":"val2", "stageId":"1"}]}}
+        "crm":[{"contactid":"1", "fields":["Joe1","100","JoeNotes"], "stageId":"1"},{"contactid":"2", "fields":["Jane2","200","JaneNotes"], "stageId":"1"}]}}
 ,{"name":"Event", "id":"2", "pipeline":{
     "stages":[{"stageId":"1", "stageName":"Working", "stageColour":"teal"}, {"stageId":"2", "stageName":"Finalized", "stageColour":"orange"}, {"stageId":"3", "stageName":"Booked", "stageColour":"red"}, {"stageId":"4", "stageName":"Paid For", "stageColour":"green"}],
     "fields":[{"fieldName":"Name", "fieldType":"text", "display":"yes"}, 
                 {"fieldName":"Description", "fieldType":"text", "display":"no"}
                 ,{"fieldName":"Amount", "fieldType":"number", "display":"yes"}],
-    "crm":[{"contactid":"1", "field1":"val1", "field2":"val2", "stageId":"1"},{"contactid":"2", "field1":"val1", "field2":"val2", "stageId":"2"}]}}];;
+    "crm":[{"contactid":"1", "fields":["Frank1","FrankDesc","10"], "stageId":"1"},{"contactid":"2", "fields":["Anne2","AnneDesc","10"], "stageId":"2"}]}}];;
 	var currentFlow = myFlows[0];
 	var currentIndex = 0;
+	var currentStageId;
 	return {
 		load: function()
 		{
@@ -64,6 +65,14 @@ app.factory('dataServices', function(){
 		getCurrentFlowIndex: function()
 		{
 			return currentIndex;
+		},
+		setCurrentStageId: function(stageId)
+		{
+			currentStageId = stageId;
+		},
+		getCurrentStageId: function()
+		{
+			return currentStageId;
 		}
 	}
 });
@@ -95,12 +104,28 @@ function stagesCtrl($scope, $location, dataServices) {
 	
 	$scope.viewStage = function(stageid)
 	{
+		dataServices.setCurrentStageId(stageid);
 		$location.path('/stageview/' + stageid);
 	}
 	
 }
 
-function stageViewCtrl($scope, $location) {
+function stageViewCtrl($scope, $location, dataServices) {
+	$scope.selectedStageId = dataServices.getCurrentStageId();
+	$scope.pipelines = dataServices.load();	
+	$scope.flow = $scope.pipelines[dataServices.getCurrentFlowIndex()];
+	$scope.stages = $scope.flow.pipeline.stages;
+	$scope.fields = $scope.flow.pipeline.fields;
+	$scope.crm = $scope.flow.pipeline.crm;
+		
+	$scope.visibleFieldIndexes = new Array();
+	
+	angular.forEach($scope.fields, function(field, key){
+		if (field.display  == "yes")
+		{
+			$scope.visibleFieldIndexes.push(key);
+		}
+	});
 	
 }
 

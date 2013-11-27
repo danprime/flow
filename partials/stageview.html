@@ -1,7 +1,22 @@
 <button id="stageViewBackButton">&lt; Stages</button>
 <table id="stageview" border="1">
-<tr><th>Name</th><th>Stage</th><th>Field 1</th></tr>
-<tr><td>John Doe</td><td><select><option selected>Stage1</option></select></td><td><input type="text"/></td></tr>
-<tr><td>John Doe</td><td><select><option selected>Stage1</option></select></td><td><input type="text"/></td></tr>
-<tr><td>John Doe</td><td><select><option selected>Stage1</option></select></td><td><input type="text"/></td></tr>
+<tr><th>Stage</th>
+<th ng-Repeat="field in fields | filter:{display:'yes'}">
+{{field.fieldName}}
+</th></tr>
+
+
+
+<tr ng-Repeat="client in crm | filter:{stageId : selectedStageId}">
+<td>
+<select ng-Model="client.stageId">
+<option ng-Repeat="stage in stages" value="{{stage.stageId}}" ng-Selected="client.stageId == stage.stageId">{{stage.stageName}}</option>
+</select>
+</td>
+<td ng-Repeat="field in client.fields">{{field}}</td>
+</tr>
 </table>
+{{selectedStageId}}
+{{visibleFieldIndexes}}
+{{crm}}
+{{stages}}
