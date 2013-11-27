@@ -9,6 +9,14 @@ var init = function () {
         {
         	switch(screen)
         	{	
+        		case 1:
+        			window.location.href ="#/stages";
+        			break;
+        		case 2:
+        			window.location.href = "#/stages";
+        		case 3:
+        			window.location.href = "#/stages";
+        			break;
         		default:
         			tizen.application.getCurrentApplication().exit();
     				break;
@@ -218,6 +226,7 @@ function personViewCtrl($scope, $location, dataServices) {
 }
 
 function settingsCtrl($scope, $location, dataServices, idservice) {
+	screen = 3;
 	$scope.availableColours = Array('aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'yellow');
 	
 	$scope.pipelines = dataServices.load();
