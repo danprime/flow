@@ -65,13 +65,25 @@ app.factory('dataServices', function(){
         "fields":[{"fieldName":"Name", "fieldType":"text", "display":"yes"}, 
                     {"fieldName":"Amount", "fieldType":"number", "display":"yes"}
                     ,{"fieldName":"Notes", "fieldType":"text", "display":"no"}],
-        "crm":[{"id":"1", "fields":["Joe1","100","JoeNotes"], "stageId":"1"},{"id":"2", "fields":["Jane2","200","JaneNotes"], "stageId":"1"}]}}
+        "crm":[{"id":"1", "fields":["Joe","100",""], "stageId":"1"},{"id":"2", "fields":["Jane","200",""], "stageId":"1"}]}}
 ,{"name":"Event", "id":"2", "pipeline":{
     "stages":[{"stageId":"1", "stageName":"Working", "stageColour":"teal"}, {"stageId":"2", "stageName":"Finalized", "stageColour":"orange"}, {"stageId":"3", "stageName":"Booked", "stageColour":"red"}, {"stageId":"4", "stageName":"Paid For", "stageColour":"green"}],
     "fields":[{"fieldName":"Name", "fieldType":"text", "display":"yes"}, 
                 {"fieldName":"Description", "fieldType":"text", "display":"no"}
                 ,{"fieldName":"Amount", "fieldType":"number", "display":"yes"}],
-    "crm":[{"id":"1", "fields":["Frank1","FrankDesc","10"], "stageId":"1"},{"id":"2", "fields":["Anne2","AnneDesc","10"], "stageId":"2"}]}}];;
+    "crm":[{"id":"1", "fields":["Frank","FrankDesc","10"], "stageId":"1"},{"id":"2", "fields":["Anne","AnneDesc","10"], "stageId":"2"}]}}
+,{"name":"Bug Tracking", "id":"3", "pipeline":{
+    "stages":[{"stageId":"1", "stageName":"Reported", "stageColour":"teal"}, {"stageId":"2", "stageName":"Working", "stageColour":"orange"}, {"stageId":"3", "stageName":"Not Reproducible", "stageColour":"red"}, {"stageId":"4", "stageName":"Not Fixing Now", "stageColour":"green"}, {"stageId":"4", "stageName":"Review", "stageColour":"aqua"}, {"stageId":"4", "stageName":"Fixed", "stageColour":"blue"}],
+    "fields":[{"fieldName":"Name", "fieldType":"text", "display":"yes"}, 
+                {"fieldName":"Description", "fieldType":"text", "display":"no"}
+                ,{"fieldName":"Priority", "fieldType":"number", "display":"yes"}],
+    "crm":[{"id":"1", "fields":["Localization","English is Incorrect","1"], "stageId":"1"},{"id":"2", "fields":["Branding","Change Graphics","2"], "stageId":"1"}]}}
+,{"name":"Lending", "id":"4", "pipeline":{
+    "stages":[{"stageId":"1", "stageName":"Lent", "stageColour":"teal"}, {"stageId":"2", "stageName":"Notified", "stageColour":"orange"}, {"stageId":"3", "stageName":"Paid Back", "stageColour":"green"}, {"stageId":"4", "stageName":"Late", "stageColour":"red"}],
+    "fields":[{"fieldName":"Name", "fieldType":"text", "display":"yes"}, 
+                {"fieldName":"Amount", "fieldType":"number", "display":"yes"}
+                ],
+    "crm":[{"id":"1", "fields":["Joe", "150.00"], "stageId":"1"},{"id":"2", "fields":["Frank", "450.00"], "stageId":"3"},{"id":"3", "fields":["Monica", "20.50"], "stageId":"2"}]}}];;
 	var currentFlow = myFlows[0];
 	var currentIndex = 0;
 	var currentStageId;
