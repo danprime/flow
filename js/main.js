@@ -157,6 +157,32 @@ function stageViewCtrl($scope, $location, dataServices) {
 }
 
 function personViewCtrl($scope, $location, dataServices) {
+	$scope.selectedStageId = dataServices.getCurrentStageId();
+	$scope.pipelines = dataServices.load();	
+	$scope.flow = $scope.pipelines[dataServices.getCurrentFlowIndex()];
+	$scope.stages = $scope.flow.pipeline.stages;
+	$scope.fields = $scope.flow.pipeline.fields;
+	$scope.crm = $scope.flow.pipeline.crm;
+	$scope.currentBoxId = dataServices.getCurrentBoxId();
+	
+	//Get the first (only one) - ideally should be a filter?
+	$scope.client = _.where( $scope.crm, {id:$scope.currentBoxId})[0];
+	
+	
+	$scope.goBack = function()
+	{
+		$location.path('/stageview/' + $scope.selectedStageId);
+	}
+	
+	$scope.deleteClient = function()
+	{	
+		var targetIndex = $scope.crm.indexOf($scope.client);
+		if (targetIndex != -1)
+		{
+			$scope.crm.splice(targetIndex, 1);
+		}
+		$scope.goBack();
+	}
 	
 }
 

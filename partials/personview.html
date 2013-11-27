@@ -1,31 +1,41 @@
-<button id="personViewBackButton">&lt; Stage</button>
+<style type="text/css">
+#tbldetails {
+	border-spacing:0;
+    border-collapse:collapse;
+}
+
+#tbldetails td{
+	
+}
+
+#clientNotesTextArea {
+	width:100%;
+}
+</style>
+<button id="personViewBackButton" ng-Click="goBack()">&lt; Stage</button>
 <div id="personDetails">
-<h3>Name</h3>
 
-<select>
-	<option value="" selected>Stage 1</option>
-	<option value="" selected>Stage 1</option>
-	<option value="" selected>Stage 1</option>
-</select>
+<h3>{{client.fields[0]}} <span style="float:right;"><select ng-Model="client.stageId">
+<option ng-Repeat="stage in stages" value="{{stage.stageId}}" ng-Selected="client.stageId == stage.stageId">{{stage.stageName}}</option>
+</select></span></h3>
 
-<h4>Details</h4>
-<table>
-<tr><td>Field 1</td><td>Value 1</td></tr>
-<tr><td>Field 1</td><td>Value 1</td></tr>
-<tr><td>Field 1</td><td>Value 1</td></tr>
-<tr><td>Field 1</td><td>Value 1</td></tr>
-<tr><td>Field 1</td><td>Value 1</td></tr>
+<strong>Details</strong><br />
+<table id="tbldetails">
+<tr ng-Repeat="field in fields">
+	<td style="text-align:right;">{{field.fieldName}}: </td>
+	<td><span ng-Hide="field.edit" ng-Click="field.edit=true;">{{client.fields[$index]}}</span>
+	<span ng-Show="field.edit"><input type="{{field.fieldType}}" ng-Model="client.fields[$index]" ng-Blur="field.edit = false;"/></span>
+	</td>
+	<td><button ng-Click="field.edit=true;">Edit</button></td>
+</tr>
 </table>
 
-<form>
-	<label>New Note</label>
-	<textarea></textarea>
-</form>
+<hr />
+<strong>Notes</strong><button ng-Click="client.editNote=true;">Edit Note</button><br />
+<span ng-Hide="client.editNote" ng-Click="client.editNote=true;">{{client.notes}}</span>
+<span ng-Show="client.editNote"><textarea id="clientNotesTextArea" ng-Model="client.notes" ng-Blur="client.editNote = false;"/></textarea></span>
 
-<h4>Notes</h4>
-
-<table>
-<tr><td></td></tr>
-
-</table>
+</div>
+<div style="bottom:0px;position:fixed;">
+<button id="clientDelete" ng-Click="deleteClient()">Delete</button>
 </div>
