@@ -22,15 +22,15 @@ Switch to a Different Flow
 					</select>
 				</td>
 				<td>
-					<button ng-Click="changeOrder(stage,1)">D</button>
-					<button ng-Click="changeOrder(stage,-1)">U</button>
-					<button ng-Click="deleteStage(stage)">T</button>
+					<button ng-Click="changeOrder(stage,1)" style="background-image:url('images/br_down_icon&16.png');height:1.5em;width:1.5em;background-repeat:no-repeat;"></button>
+					<button ng-Click="changeOrder(stage,-1)"  style="background-image:url('images/br_up_icon&16.png');height:1.5em;width:1.5em;background-repeat:no-repeat;"></button>
+					<button ng-Click="deleteStage(stage)"  style="background-image:url('images/delete_icon&16.png');height:1.5em;width:1.5em;background-repeat:no-repeat;"></button>
 				</td>
 	</tr>
 	
 	<tr><td><input type="text" ng-Model="newStage.stageName" /></td><td><select ng-Model="newStage.stageColour">
 						<option ng-Repeat="colour in availableColours" value="{{colour}}" ng-Selected="colour == stage.stageColour">{{colour}}</option>
-					</select></td><td><button ng-Click="addNewStage(newStage)">Add</button></td></tr>
+					</select></td><td><button ng-Click="addNewStage(newStage)" style="background-image:url('images/sq_plus_icon&24.png');height:2.3em;width:2.2em;background-repeat:no-repeat;"></button></td></tr>
 </table>
 <h3>Fields</h3>
 <table>
@@ -53,7 +53,7 @@ Switch to a Different Flow
 		</select>
 	</td>
 	<td>
-		<button ng-Click="removeField(field)">T</button>
+		<button ng-Click="removeField(field)" style="background-image:url('images/delete_icon&16.png');height:1.5em;width:1.5em;background-repeat:no-repeat;"></button>
 	</td>
 </tr>
 <tr><td><input type="text" ng-Model="newField.fieldName" /></td><td>
@@ -61,10 +61,10 @@ Switch to a Different Flow
 			<option ng-Selected="field.fieldType=='text'">Text</option>
 			<option ng-Selected="field.fieldType=='number'">#</option>
 		</select>
-	</td><td><button ng-Click="addField(newField)">Add</button></td></tr>
+	</td><td><button ng-Click="addField(newField)" style="background-image:url('images/sq_plus_icon&24.png');height:2.3em;width:2.2em;background-repeat:no-repeat;"></button></td></tr>
 </table>
 <hr />
 <button ng-Click="deleteFlow()">Delete this Flow</button>
 
 <hr />
-<label>New Flow: <input type="text" id="newFlowName" ng-Model="newFlowName"></label><button ng-Click="createNewFlow()">Add</button><br />
+<label>New Flow: <input type="text" id="newFlowName" ng-Model="newFlowName"></label><button ng-Click="createNewFlow()" style="background-image:url('images/sq_plus_icon&24.png');height:2.3em;width:2.2em;background-repeat:no-repeat;"></button><br />

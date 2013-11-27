@@ -26,16 +26,16 @@
 	<td><span ng-Hide="field.edit" ng-Click="field.edit=true;">{{client.fields[$index]}}</span>
 	<span ng-Show="field.edit"><input type="{{field.fieldType}}" ng-Model="client.fields[$index]" ng-Blur="field.edit = false;"/></span>
 	</td>
-	<td><button ng-Click="field.edit=true;">Edit</button></td>
+	<td><button ng-Click="field.edit=true;"><img src="images/doc_edit_icon&16.png"></button></td>
 </tr>
 </table>
 
 <hr />
-<strong>Notes</strong><button ng-Click="client.editNote=true;">Edit Note</button><br />
+<strong>Notes</strong><button ng-Click="client.editNote=true;"><img src="images/doc_edit_icon&24.png">Edit Note</button><br />
 <span ng-Hide="client.editNote" ng-Click="client.editNote=true;">{{client.notes}}</span>
 <span ng-Show="client.editNote"><textarea id="clientNotesTextArea" ng-Model="client.notes" ng-Blur="client.editNote = false;"/></textarea></span>
 
 </div>
 <div style="bottom:0px;position:fixed;">
-<button id="clientDelete" ng-Click="deleteClient()">Delete</button>
+<button id="clientDelete" ng-Click="confirm('Are you absolutely sure you want to delete?')"><img src="images/delete_icon&16.png"> Delete</button>
 </div>
