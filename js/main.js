@@ -128,7 +128,7 @@ function stagesCtrl($scope, $location, dataServices) {
 	{
 		dataServices.setCurrentStageId(stageid);
 		$location.path('/stageview/' + stageid);
-	}	
+	}
 }
 
 function stageViewCtrl($scope, $location, dataServices) {
@@ -289,4 +289,8 @@ function settingsCtrl($scope, $location, dataServices, idservice) {
 		}
 	}
 	
+	$scope.gotoStages = function()
+	{
+		$location.path('/stages');
+	}
 }
