@@ -13,6 +13,18 @@ window.onload = init;
 
 var app = angular.module('flowapp', ['ngRoute']);
 
+app.filter('indexInSet', function() {
+	return function(input, arraySet) {
+		var out =[];
+		
+		angular.forEach(arraySet, function(value, key){
+			out.push(input[value]);
+		});
+		
+		return out;
+	}
+});
+
 app.factory('idservice', function() {
 	
 	var s4 = function () {
@@ -37,16 +49,18 @@ app.factory('dataServices', function(){
         "fields":[{"fieldName":"Name", "fieldType":"text", "display":"yes"}, 
                     {"fieldName":"Amount", "fieldType":"number", "display":"yes"}
                     ,{"fieldName":"Notes", "fieldType":"text", "display":"no"}],
-        "crm":[{"contactid":"1", "fields":["Joe1","100","JoeNotes"], "stageId":"1"},{"contactid":"2", "fields":["Jane2","200","JaneNotes"], "stageId":"1"}]}}
+        "crm":[{"id":"1", "fields":["Joe1","100","JoeNotes"], "stageId":"1"},{"id":"2", "fields":["Jane2","200","JaneNotes"], "stageId":"1"}]}}
 ,{"name":"Event", "id":"2", "pipeline":{
     "stages":[{"stageId":"1", "stageName":"Working", "stageColour":"teal"}, {"stageId":"2", "stageName":"Finalized", "stageColour":"orange"}, {"stageId":"3", "stageName":"Booked", "stageColour":"red"}, {"stageId":"4", "stageName":"Paid For", "stageColour":"green"}],
     "fields":[{"fieldName":"Name", "fieldType":"text", "display":"yes"}, 
                 {"fieldName":"Description", "fieldType":"text", "display":"no"}
                 ,{"fieldName":"Amount", "fieldType":"number", "display":"yes"}],
-    "crm":[{"contactid":"1", "fields":["Frank1","FrankDesc","10"], "stageId":"1"},{"contactid":"2", "fields":["Anne2","AnneDesc","10"], "stageId":"2"}]}}];;
+    "crm":[{"id":"1", "fields":["Frank1","FrankDesc","10"], "stageId":"1"},{"id":"2", "fields":["Anne2","AnneDesc","10"], "stageId":"2"}]}}];;
 	var currentFlow = myFlows[0];
 	var currentIndex = 0;
 	var currentStageId;
+	var currentBoxId;
+	
 	return {
 		load: function()
 		{
@@ -73,6 +87,14 @@ app.factory('dataServices', function(){
 		getCurrentStageId: function()
 		{
 			return currentStageId;
+		},
+		setCurrentBoxId: function(boxId)
+		{
+			currentBoxId = boxId;
+		},
+		getCurrentBoxId: function()
+		{
+			return currentBoxId;
 		}
 	}
 });
@@ -106,8 +128,7 @@ function stagesCtrl($scope, $location, dataServices) {
 	{
 		dataServices.setCurrentStageId(stageid);
 		$location.path('/stageview/' + stageid);
-	}
-	
+	}	
 }
 
 function stageViewCtrl($scope, $location, dataServices) {
@@ -120,6 +141,7 @@ function stageViewCtrl($scope, $location, dataServices) {
 		
 	$scope.visibleFieldIndexes = new Array();
 	
+	//DOC: Get the the visible indexes for filtering.
 	angular.forEach($scope.fields, function(field, key){
 		if (field.display  == "yes")
 		{
@@ -127,9 +149,14 @@ function stageViewCtrl($scope, $location, dataServices) {
 		}
 	});
 	
+	$scope.openBox = function(boxID)
+	{
+		dataServices.setCurrentBoxId(boxID);
+		$location.path('/personview/' + boxID);
+	}
 }
 
-function personViewCtrl($scope, $location) {
+function personViewCtrl($scope, $location, dataServices) {
 	
 }
 
