@@ -78,14 +78,23 @@ app.factory('dataServices', function(){
 	var currentBoxId;
 	
 	return {
-		load: function()
+		init: function()
 		{
+			var loadedFlows = JSON.parse(localStorage.getItem("flows"));
+			if (loadedFlows != null)
+			{
+				myFlows = loadedFlows;
+			}
+		},
+		load: function()
+		{			
 			return myFlows;
 		},
 		save: function(flows)
 		{
+			console.log("Saving...");
 			myFlows = flows;
-			console.log("saving...");
+			localStorage.setItem("flows", JSON.stringify(myFlows));
 		},
 		setCurrentFlowIndex: function(flowIndex)
 		{
@@ -126,6 +135,7 @@ app.config(['$routeProvider', function($routeProvider) {
 
 function stagesCtrl($scope, $location, dataServices) {
 	
+	dataServices.init();
 	screen = 0;
 	$scope.pipelines = dataServices.load();
 	
@@ -143,9 +153,16 @@ function stagesCtrl($scope, $location, dataServices) {
 	
 	$scope.viewStage = function(stageid)
 	{
+		dataServices.save($scope.pipelines);
 		dataServices.setCurrentStageId(stageid);
 		$location.path('/stageview/' + stageid);
 	}
+	
+	//Auto-Save
+	window.setInterval(function(){
+		if (screen >= 2)
+		dataServices.save($scope.pipelines)}, 10000);
+	
 }
 
 function stageViewCtrl($scope, $location, dataServices, idservice) {
@@ -171,12 +188,14 @@ function stageViewCtrl($scope, $location, dataServices, idservice) {
 	
 	$scope.openBox = function(boxID)
 	{
+		dataServices.save($scope.pipelines);
 		dataServices.setCurrentBoxId(boxID);
 		$location.path('/personview/' + boxID);
 	}
 	
 	$scope.gotoStages = function()
 	{
+		dataServices.save($scope.pipelines);
 		$location.path('/stages');
 	}
 	
@@ -188,6 +207,7 @@ function stageViewCtrl($scope, $location, dataServices, idservice) {
 		newBox.fields = $scope.newFields;
 		
 		$scope.crm.push(newBox);
+		dataServices.save($scope.pipelines);
 	}
 }
 
@@ -210,6 +230,7 @@ function personViewCtrl($scope, $location, dataServices) {
 	
 	$scope.goBack = function()
 	{
+		dataServices.save($scope.pipelines);
 		$location.path('/stageview/' + $scope.selectedStageId);
 	}
 	
@@ -220,9 +241,14 @@ function personViewCtrl($scope, $location, dataServices) {
 		{
 			$scope.crm.splice(targetIndex, 1);
 		}
+		dataServices.save($scope.pipelines);
 		$scope.goBack();
 	}
 	
+	$scope.save = function()
+	{
+		dataServices.save($scope.pipelines);
+	}
 }
 
 function settingsCtrl($scope, $location, dataServices, idservice) {
@@ -249,6 +275,8 @@ function settingsCtrl($scope, $location, dataServices, idservice) {
 			dataServices.setCurrentFlowIndex(newIndex);
 			$scope.currentPipeline = $scope.selectedPipeline;
 		}
+		
+		dataServices.save($scope.pipelines);
 	}
 	
 	$scope.changeFlowName = function(newName)
@@ -258,6 +286,8 @@ function settingsCtrl($scope, $location, dataServices, idservice) {
 			$scope.currentPipeline.name = newName;
 			$scope.newNameForCurrentFlow = "";
 		}
+		
+		dataServices.save($scope.pipelines);
 	}
 	
 	$scope.changeOrder = function(stage, direction)
@@ -279,6 +309,8 @@ function settingsCtrl($scope, $location, dataServices, idservice) {
 			$scope.currentPipeline.pipeline.stages[sourceIndex + 1] = stage;
 			$scope.currentPipeline.pipeline.stages[sourceIndex] = temp;
 		}
+		
+		dataServices.save($scope.pipelines);
 	}
 	$scope.addNewStage = function(stage)
 	{
@@ -291,6 +323,8 @@ function settingsCtrl($scope, $location, dataServices, idservice) {
 		}
 		$scope.currentPipeline.pipeline.stages.push(stage);
 		$scope.newStage = "";
+		
+		dataServices.save($scope.pipelines);
 	}
 
 	
@@ -301,6 +335,8 @@ function settingsCtrl($scope, $location, dataServices, idservice) {
 		{
 			$scope.currentPipeline.pipeline.stages.splice(targetIndex, 1);
 		}
+		
+		dataServices.save($scope.pipelines);
 	}
 	
 	$scope.createNewFlow = function(newFlowName)
@@ -319,6 +355,8 @@ function settingsCtrl($scope, $location, dataServices, idservice) {
 		
 		$scope.selectedPipeline = newPipeLine;
 		$scope.switchPipeline();
+		
+		dataServices.save($scope.pipelines);
 	}
 	
 	$scope.addField = function(targetField)
@@ -326,6 +364,8 @@ function settingsCtrl($scope, $location, dataServices, idservice) {
 		targetField.display = "no";
 		$scope.currentPipeline.pipeline.fields.push(targetField);
 		$scope.newField = "";
+		
+		dataServices.save($scope.pipelines);
 	}
 	$scope.removeField = function(targetField)
 	{
@@ -334,10 +374,13 @@ function settingsCtrl($scope, $location, dataServices, idservice) {
 		{
 			$scope.currentPipeline.pipeline.fields.splice(targetIndex, 1);
 		}
+		
+		dataServices.save($scope.pipelines);
 	}
 	
 	$scope.gotoStages = function()
 	{
+		dataServices.save($scope.pipelines);
 		$location.path('/stages');
 	}
 	
@@ -355,5 +398,12 @@ function settingsCtrl($scope, $location, dataServices, idservice) {
 				
 			}
 		}
+		
+		dataServices.save($scope.pipelines);
+	}
+	
+	$scope.save = function()
+	{
+		dataServices.save($scope.pipelines);
 	}
 }
