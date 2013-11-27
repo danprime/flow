@@ -1,11 +1,19 @@
 //Initialize function
+var screen = 0;
 var init = function () {
     // TODO:: Do your initialization job
 	
     // add eventListener for tizenhwkey
     document.addEventListener('tizenhwkey', function(e) {
         if(e.keyName == "back")
-            tizen.application.getCurrentApplication().exit();
+        {
+        	switch(screen)
+        	{	
+        		default:
+        			tizen.application.getCurrentApplication().exit();
+    				break;
+        	}
+        }
     });
 };
 // window.onload can work without <body onload="">
@@ -110,6 +118,7 @@ app.config(['$routeProvider', function($routeProvider) {
 
 function stagesCtrl($scope, $location, dataServices) {
 	
+	screen = 0;
 	$scope.pipelines = dataServices.load();
 	
 	$scope.flow = $scope.pipelines[dataServices.getCurrentFlowIndex()];
@@ -132,6 +141,7 @@ function stagesCtrl($scope, $location, dataServices) {
 }
 
 function stageViewCtrl($scope, $location, dataServices, idservice) {
+	screen = 1;
 	$scope.selectedStageId = dataServices.getCurrentStageId();
 	$scope.pipelines = dataServices.load();	
 	$scope.flow = $scope.pipelines[dataServices.getCurrentFlowIndex()];
@@ -176,6 +186,7 @@ function stageViewCtrl($scope, $location, dataServices, idservice) {
 }
 
 function personViewCtrl($scope, $location, dataServices) {
+	screen = 2;
 	$scope.selectedStageId = dataServices.getCurrentStageId();
 	$scope.pipelines = dataServices.load();	
 	$scope.flow = $scope.pipelines[dataServices.getCurrentFlowIndex()];
