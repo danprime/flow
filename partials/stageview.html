@@ -31,3 +31,12 @@
 <td ng-Repeat="field in client.fields | indexInSet:visibleFieldIndexes" ng-Click="openBox(client.id)">{{field}}</td>
 </tr>
 </table>
+<hr />
+<form name="newBoxForm">
+<strong>New...</strong>
+<div ng-Repeat="field in fields">
+<label>{{field.fieldName}}</label>
+<input type="{{field.fieldType}}" ng-Model="newFields[$index]">
+</div>
+<button ng-Click="addClient()">Add</button>
+</form>

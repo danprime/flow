@@ -131,13 +131,15 @@ function stagesCtrl($scope, $location, dataServices) {
 	}
 }
 
-function stageViewCtrl($scope, $location, dataServices) {
+function stageViewCtrl($scope, $location, dataServices, idservice) {
 	$scope.selectedStageId = dataServices.getCurrentStageId();
 	$scope.pipelines = dataServices.load();	
 	$scope.flow = $scope.pipelines[dataServices.getCurrentFlowIndex()];
 	$scope.stages = $scope.flow.pipeline.stages;
 	$scope.fields = $scope.flow.pipeline.fields;
 	$scope.crm = $scope.flow.pipeline.crm;
+	
+	$scope.newFields = new Array();
 		
 	$scope.visibleFieldIndexes = new Array();
 	
@@ -158,6 +160,18 @@ function stageViewCtrl($scope, $location, dataServices) {
 	$scope.gotoStages = function()
 	{
 		$location.path('/stages');
+	}
+	
+	$scope.addClient = function()
+	{
+		var newBox = new Object();
+		newBox.id = idservice.gen();
+		newBox.stageId = angular.copy($scope.selectedStageId);
+		newBox.fields = $scope.newFields;
+		
+		$scope.crm.push(newBox);
+		console.log(newBox);
+		
 	}
 }
 
