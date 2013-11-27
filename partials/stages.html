@@ -13,9 +13,10 @@
 	width:100%;
 	padding:0px;
 	margin:0px;
-	font-size:2.5em;
+	font-size:2em;
+	color:#eee;
 }
 </style>
 <table id="stagestbl">
-<tr ng-repeat="stage in stages" height="{{stageBoxHeight}}"><td><button style="height:{{stageBoxHeight}}px;" ng-Click="viewStage(stage.stageId)">{{stage.stageName}}</button></td></tr>
+<tr ng-repeat="stage in stages" height="{{stageBoxHeight}}"><td><button style="height:{{stageBoxHeight}}px; background-color:{{stage.stageColour}}" ng-Click="viewStage(stage.stageId)"><span style="font-size:2em;">{{stage.count}}</span><br/>{{stage.stageName}}</button></td></tr>
 </table>

@@ -1,40 +1,69 @@
 //Initialize function
 var init = function () {
     // TODO:: Do your initialization job
-    console.log("init() called");
-
+	
     // add eventListener for tizenhwkey
     document.addEventListener('tizenhwkey', function(e) {
         if(e.keyName == "back")
             tizen.application.getCurrentApplication().exit();
     });
-    
-    console.log("window height:"+ window.innerHeight + " width:" + window.innerWidth);
 };
 // window.onload can work without <body onload="">
 window.onload = init;
 
 var app = angular.module('flowapp', ['ngRoute']);
 
-app.factory('dataServices', function(){
-	var myflows = new Object();	
+app.factory('idservice', function() {
 	
+	var s4 = function () {
+		  return Math.floor((1 + Math.random()) * 0x10000)
+          .toString(16)
+          .substring(1);
+	};
+
+	
+	return {
+		gen: function()
+		{
+			return s4() + s4() + '-' + s4();
+		}
+	}
+	
+});
+
+app.factory('dataServices', function(){
+	var myFlows = [{"name":"Sales", "id":"1", "pipeline":{
+	    "stages":[{"stageId":"1", "stageName":"Lead", "stageColour":"teal"}, {"stageId":"2", "stageName":"Contacted", "stageColour":"orange"}, {"stageId":"3", "stageName":"Pitched", "stageColour":"red"}, {"stageId":"4", "stageName":"Sold", "stageColour":"green"}],
+        "fields":[{"fieldName":"Name", "fieldType":"text", "display":"yes"}, 
+                    {"fieldName":"Amount", "fieldType":"number", "display":"yes"}
+                    ,{"fieldName":"Notes", "fieldType":"text", "display":"no"}],
+        "crm":[{"contactid":"1", "field1":"val1", "field2":"val2", "stageId":"1"},{"contactid":"2", "field1":"val1", "field2":"val2", "stageId":"1"}]}}
+,{"name":"Event", "id":"2", "pipeline":{
+    "stages":[{"stageId":"1", "stageName":"Working", "stageColour":"teal"}, {"stageId":"2", "stageName":"Finalized", "stageColour":"orange"}, {"stageId":"3", "stageName":"Booked", "stageColour":"red"}, {"stageId":"4", "stageName":"Paid For", "stageColour":"green"}],
+    "fields":[{"fieldName":"Name", "fieldType":"text", "display":"yes"}, 
+                {"fieldName":"Description", "fieldType":"text", "display":"no"}
+                ,{"fieldName":"Amount", "fieldType":"number", "display":"yes"}],
+    "crm":[{"contactid":"1", "field1":"val1", "field2":"val2", "stageId":"1"},{"contactid":"2", "field1":"val1", "field2":"val2", "stageId":"2"}]}}];;
+	var currentFlow = myFlows[0];
+	var currentIndex = 0;
 	return {
 		load: function()
 		{
-			console.log("loading");
+			return myFlows;
 		},
-		save: function()
+		save: function(flows)
 		{
+			myFlows = flows;
 			console.log("saving...");
 		},
-		getFlow: function(id)
+		setCurrentFlowIndex: function(flowIndex)
 		{
-			
+			currentIndex = flowIndex;
+			currentFlow = myFlows[flowIndex];
 		},
-		getFlows: function()
+		getCurrentFlowIndex: function()
 		{
-			return myflows;
+			return currentIndex;
 		}
 	}
 });
@@ -48,19 +77,21 @@ app.config(['$routeProvider', function($routeProvider) {
 	  $routeProvider.otherwise({redirectTo: '/stages'});
 	}]);
 
-function stagesCtrl($scope, $location) {
+function stagesCtrl($scope, $location, dataServices) {
 	
-	$scope.pipeline = {"pipeline1":{
-	    "stages":[{"stageId":"1", "stageName":"Lead", "stageColour":"yellow"}, {"stageName":"Contacted", "stageColour":"orange"}, {"stageName":"Pitched", "stageColour":"red"}, {"stageName":"Sold", "stageColour":"green"}],
-	        "fields":[{"fieldName":"a", "fieldType":"text", "display":"yes/no"}, 
-	                    {"fieldName":"b", "fieldType":"number", "display":"yes/no"}
-	                    ,{"fieldName":"c", "fieldType":"text", "display":"yes/no"}
-	                    ,{"fieldName":"d", "fieldType":"number", "display":"yes/no"}],
-	        "crm":[{"contactid":"1", "field1":"val1", "field2":"val2", "stageId":"stage1"},{"contactid":"2", "field1":"val1", "field2":"val2", "stageId":"stage1"}]}};
+	$scope.pipelines = dataServices.load();
 	
-	$scope.stages = $scope.pipeline.pipeline1.stages;
+	$scope.flow = $scope.pipelines[dataServices.getCurrentFlowIndex()];
+	
+	$scope.stages = $scope.flow.pipeline.stages;
 	
 	$scope.stageBoxHeight = (window.innerHeight - 100) / $scope.stages.length;
+	
+	angular.forEach($scope.stages, function(stage, key){
+		
+		crms = _.where( $scope.flow.pipeline.crm, {stageId:stage.stageId});
+		stage.count = crms.length;
+	});
 	
 	$scope.viewStage = function(stageid)
 	{
@@ -77,39 +108,27 @@ function personViewCtrl($scope, $location) {
 	
 }
 
-function settingsCtrl($scope, $location) {
+function settingsCtrl($scope, $location, dataServices, idservice) {
 	$scope.availableColours = Array('aqua', 'black', 'blue', 'fuchsia', 'gray', 'green', 'lime', 'maroon', 'navy', 'olive', 'orange', 'purple', 'red', 'silver', 'teal', 'yellow');
-		
-	$scope.pipelines = [{"name":"Sales", "id":"1", "pipeline":{
-	    "stages":[{"stageId":"1", "stageName":"Lead", "stageColour":"yellow"}, {"stageName":"Contacted", "stageColour":"orange"}, {"stageName":"Pitched", "stageColour":"red"}, {"stageName":"Sold", "stageColour":"green"}],
-	        "fields":[{"fieldName":"a", "fieldType":"text", "display":"no"}, 
-	                    {"fieldName":"b", "fieldType":"number", "display":"no"}
-	                    ,{"fieldName":"c", "fieldType":"text", "display":"no"}
-	                    ,{"fieldName":"d", "fieldType":"number", "display":"yes"}],
-	        "crm":[{"contactid":"1", "field1":"val1", "field2":"val2", "stageId":"stage1"},{"contactid":"2", "field1":"val1", "field2":"val2", "stageId":"stage1"}]}}
-	,{"name":"Ideas", "id":"2", "pipeline":{
-	    "stages":[{"stageId":"1", "stageName":"Lead", "stageColour":"yellow"}, {"stageName":"Contacted", "stageColour":"orange"}, {"stageName":"Pitched", "stageColour":"red"}, {"stageName":"Sold", "stageColour":"green"}],
-        "fields":[{"fieldName":"a", "fieldType":"text", "display":"yes/no"}, 
-                    {"fieldName":"b", "fieldType":"number", "display":"yes/no"}
-                    ,{"fieldName":"c", "fieldType":"text", "display":"yes/no"}
-                    ,{"fieldName":"d", "fieldType":"number", "display":"yes/no"}],
-        "crm":[{"contactid":"1", "field1":"val1", "field2":"val2", "stageId":"stage1"},{"contactid":"2", "field1":"val1", "field2":"val2", "stageId":"stage1"}]}}];
 	
-	$scope.currentPipeline = "";
+	$scope.pipelines = dataServices.load();
 	
-	$scope.selectedPipeline; //TODO Add a watch on this?
+	$scope.selectedPipeline = $scope.pipelines[dataServices.getCurrentFlowIndex()];
 	
 	//DOC: If nothing is selected, select the first one.
 	if ($scope.selectedPipeline == null)
 	{
 		$scope.selectedPipeline = $scope.pipelines[0];
-		$scope.currentPipeline = $scope.selectedPipeline;
 	}
+	
+	$scope.currentPipeline = $scope.selectedPipeline;
 	
 	$scope.switchPipeline = function()
 	{
 		if (angular.equals($scope.currentPipeline, $scope.selectedPipeline) == false)
 		{
+			var newIndex = $scope.pipelines.indexOf($scope.selectedPipeline);
+			dataServices.setCurrentFlowIndex(newIndex);
 			$scope.currentPipeline = $scope.selectedPipeline;
 		}
 	}
@@ -145,6 +164,8 @@ function settingsCtrl($scope, $location) {
 	}
 	$scope.addNewStage = function(stage)
 	{
+		stage.stageId = idservice.gen()
+		console.log("Stage Id:" + stage.stageId);
 		$scope.currentPipeline.pipeline.stages.push(stage);
 		$scope.newStage = "";
 	}
@@ -161,11 +182,17 @@ function settingsCtrl($scope, $location) {
 	
 	$scope.createNewFlow = function(newFlowName)
 	{
-		var newPipeline = new Object();
-		newPipeline.name = newFlowName;
-		newPipeline.id = "";
-		newPipeline.pipelines = new Object();
-		newPipeline.pipelines.stages = Array();
+		var newPipeline = new Object();		
+		newPipeLine = {"name":"Sales", "id":"1", "pipeline":{
+	    "stages":[{"stageId":"1", "stageName":"Lead", "stageColour":"yellow"}, {"stageName":"Contacted", "stageColour":"orange"}, {"stageName":"Pitched", "stageColour":"red"}, {"stageName":"Sold", "stageColour":"green"}],
+	        "fields":[{"fieldName":"a", "fieldType":"text", "display":"no"}, 
+	                    {"fieldName":"b", "fieldType":"number", "display":"no"}
+	                    ,{"fieldName":"c", "fieldType":"text", "display":"no"}
+	                    ,{"fieldName":"d", "fieldType":"number", "display":"yes"}],
+	        "crm":[{"contactid":"1", "field1":"val1", "field2":"val2", "stageId":"stage1"},{"contactid":"2", "field1":"val1", "field2":"val2", "stageId":"stage1"}]}}
+	;
+		newPipeLine.name = newFlowName;
+		newPipeLine.id = idservice.gen();
 		
 		$scope.pipelines.push(newPipeline);
 	}
