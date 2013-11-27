@@ -184,6 +184,9 @@ function personViewCtrl($scope, $location, dataServices) {
 	$scope.crm = $scope.flow.pipeline.crm;
 	$scope.currentBoxId = dataServices.getCurrentBoxId();
 	
+	$scope.stageName = _.where($scope.stages, {stageId:$scope.selectedStageId})[0].stageName
+	
+	
 	//Get the first (only one) - ideally should be a filter?
 	$scope.client = _.where( $scope.crm, {id:$scope.currentBoxId})[0];
 	
