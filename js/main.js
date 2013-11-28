@@ -347,6 +347,11 @@ function settingsCtrl($scope, $location, dataServices, idservice) {
 	}
 	$scope.addNewStage = function(stage)
 	{
+		if ((stage == null) ||(stage.stageName == null) || (stage.stageName.trim().length == 0))
+		{
+			return;
+		}
+		
 		stage.stageId = idservice.gen();
 		
 		if (stage.stageColour == null)
@@ -374,6 +379,11 @@ function settingsCtrl($scope, $location, dataServices, idservice) {
 	
 	$scope.createNewFlow = function(newFlowName)
 	{
+		if (($scope.newFlowName == null) || ($scope.newFlowName.trim().length == 0))
+		{
+			return ;
+		}
+		
 		var newPipeLine = new Object();
 		newPipeLine.name = $scope.newFlowName;
 		newPipeLine.id = idservice.gen();
@@ -394,6 +404,11 @@ function settingsCtrl($scope, $location, dataServices, idservice) {
 	
 	$scope.addField = function(targetField)
 	{
+		if ((targetField == null) ||(targetField.fieldName == null) || (targetField.fieldName.trim().length == 0))
+		{
+			return;
+		}
+		
 		targetField.display = "no";
 		$scope.currentPipeline.pipeline.fields.push(targetField);
 		$scope.newField = "";
