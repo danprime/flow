@@ -230,6 +230,10 @@ function stageViewCtrl($scope, $location, dataServices, idservice) {
 	
 	$scope.addClient = function()
 	{
+		if (($scope.newFields[0] == null) || ($scope.newFields[0].trim().length == 0))
+		{
+			return;
+		}
 		var newBox = new Object();
 		newBox.id = idservice.gen();
 		newBox.stageId = angular.copy($scope.selectedStageId);
