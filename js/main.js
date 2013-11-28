@@ -73,7 +73,7 @@ app.factory('dataServices', function(){
                 ,{"fieldName":"Amount", "fieldType":"number", "display":"yes"}],
     "crm":[{"id":"1", "fields":["Frank","FrankDesc","10"], "stageId":"1"},{"id":"2", "fields":["Anne","AnneDesc","10"], "stageId":"2"}]}}
 ,{"name":"Bug Tracking", "id":"3", "pipeline":{
-    "stages":[{"stageId":"1", "stageName":"Reported", "stageColour":"teal"}, {"stageId":"2", "stageName":"Working", "stageColour":"orange"}, {"stageId":"3", "stageName":"Not Reproducible", "stageColour":"red"}, {"stageId":"4", "stageName":"Not Fixing Now", "stageColour":"green"}, {"stageId":"4", "stageName":"Review", "stageColour":"aqua"}, {"stageId":"4", "stageName":"Fixed", "stageColour":"blue"}],
+    "stages":[{"stageId":"1", "stageName":"Reported", "stageColour":"teal"}, {"stageId":"2", "stageName":"Working", "stageColour":"orange"}, {"stageId":"3", "stageName":"Not Reproducible", "stageColour":"red"}, {"stageId":"4", "stageName":"Not Fixing Now", "stageColour":"green"}, {"stageId":"5", "stageName":"Review", "stageColour":"aqua"}, {"stageId":"6", "stageName":"Fixed", "stageColour":"blue"}],
     "fields":[{"fieldName":"Name", "fieldType":"text", "display":"yes"}, 
                 {"fieldName":"Description", "fieldType":"text", "display":"no"}
                 ,{"fieldName":"Priority", "fieldType":"number", "display":"yes"}],
@@ -196,6 +196,8 @@ function stageViewCtrl($scope, $location, dataServices, idservice) {
 			crms = _.where( $scope.flow.pipeline.crm, {stageId:stage.stageId});
 			stage.count = crms.length;
 		});
+		
+		dataServices.save($scope.pipelines);
 	}
 	//DOC: Get the the visible indexes for filtering.
 	angular.forEach($scope.fields, function(field, key){
@@ -241,6 +243,8 @@ function stageViewCtrl($scope, $location, dataServices, idservice) {
 		
 		$scope.crm.push(newBox);
 		dataServices.save($scope.pipelines);
+		$scope.newFields = "";
+		$scope.refreshStageCount();
 	}
 }
 
