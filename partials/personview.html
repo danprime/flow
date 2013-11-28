@@ -29,6 +29,12 @@
 	color:#eee;
 	margin-bottom:10px;
 }
+
+#personDetails {
+ margin-left:0.5em;
+ margin-right:0.5em;
+}
+
 </style>
 <button id="personViewBackButton" ng-Click="goBack()">&lt; {{stageName}}</button>
 <br />
@@ -46,11 +52,12 @@
 <strong>Details</strong><br />
 <table id="tbldetails">
 <tr ng-Repeat="field in fields">
+	<td><button ng-Click="field.edit=true;"><img src="images/doc_edit_icon&16.png"></button></td>
 	<td style="text-align:right;">{{field.fieldName}}: </td>
 	<td><span ng-Hide="field.edit" ng-Click="field.edit=true;">{{client.fields[$index]}}</span>
 	<span ng-Show="field.edit"><input type="{{field.fieldType}}" ng-Model="client.fields[$index]" ng-Blur="field.edit = false;"/></span>
 	</td>
-	<td><button ng-Click="field.edit=true;"><img src="images/doc_edit_icon&16.png"></button></td>
+	
 </tr>
 </table>
 
