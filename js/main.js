@@ -105,7 +105,7 @@ app.factory('dataServices', function(){
 		save: function(flows)
 		{	
 			myFlows = flows;
-			localStorage.setItem("flows", JSON.stringify(myFlows));
+			//localStorage.setItem("flows", JSON.stringify(myFlows));
 		},
 		setCurrentFlowIndex: function(flowIndex)
 		{
@@ -331,9 +331,15 @@ function settingsCtrl($scope, $location, dataServices, idservice) {
 	$scope.deleteStageConfirm = "false";
 	$scope.potentialStage;
 	$scope.deleteFieldConfirm = "false";
-	$scope.potentialField;
+	$scope.potentialField;	
 	$scope.deleteFlowConfirm = "false";
 	$scope.potential;
+	
+	$scope.errorMessageDisplay = false;
+	$scope.errorMessage = "";
+	
+	$scope.fields = $scope.selectedPipeline.pipeline.fields;
+	$scope.crm = $scope.selectedPipeline.pipeline.crm;
 	
 	//DOC: If nothing is selected, select the first one.
 	if ($scope.selectedPipeline == null)
@@ -427,9 +433,31 @@ function settingsCtrl($scope, $location, dataServices, idservice) {
 	
 	$scope.deleteStage = function(stage)
 	{
-		$scope.deleteStageConfirm = true;
-		$scope.potentialStage = stage;
+		var blockDelete = false;
+		//Check to see if there are any boxes in that stage.
+		angular.forEach($scope.crm, function(box, boxKey){			
+			if ((blockDelete == false) && (box.stageId == stage.stageId))
+			{
+				//Cannot delete as there are boxes in this stage.
+				blockDelete = true;
+			}
+		});
 		
+		if (blockDelete == false)
+		{	
+			$scope.deleteStageConfirm = true;
+			$scope.potentialStage = stage;
+		} else {
+			console.log("Cannot delete stage because there are boxes in the stage.");
+			
+			$scope.errorMessageDisplay = true;
+			$scope.errorMessage = "Cannot remove stage because there are boxes with this stage please move boxes out of this stage and try again.";
+		}
+	}
+	
+	$scope.cancelErrorMessage = function()
+	{
+		$scope.errorMessageDisplay = false;
 	}
 	
 	$scope.createNewFlow = function(newFlowName)
@@ -473,12 +501,24 @@ function settingsCtrl($scope, $location, dataServices, idservice) {
 	
 	$scope.confirmFieldDelete = function()
 	{
-
+		var targetFieldIndex = $scope.fields.indexOf($scope.potentialField);
 		var targetIndex = $scope.currentPipeline.pipeline.fields.indexOf($scope.potentialField);
-		if (targetIndex != -1)
+		
+		if ((targetFieldIndex == -1) || (targetIndex == -1))
 		{
-			$scope.currentPipeline.pipeline.fields.splice(targetIndex, 1);
+			console.log("Cannot remove field because we can't locate them in the scopes.");
+			$scope.errorMessageDisplay = true;
+			$scope.errorMessage = "Cannot remove field because of data structure mis-match.";
+			return ;
 		}
+		
+		$scope.currentPipeline.pipeline.fields.splice(targetIndex, 1);
+		
+		//go through each box
+		angular.forEach($scope.crm, function(box, boxKey){
+			//Remove the field from each box.
+			box.fields.splice(targetFieldIndex, 1);
+		});
 		
 		dataServices.save($scope.pipelines);
 		$scope.deleteFieldConfirm = false;
@@ -491,6 +531,8 @@ function settingsCtrl($scope, $location, dataServices, idservice) {
 	
 	$scope.removeField = function(targetField)
 	{
+		
+		
 		$scope.deleteFieldConfirm = true;
 		$scope.potentialField = targetField;
 	}
