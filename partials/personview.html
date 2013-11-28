@@ -11,11 +11,35 @@
 #clientNotesTextArea {
 	width:100%;
 }
+#personviewquicktbl {
+	border:0px;width:100%;
+}
+
+#personviewquicktbl td {
+	cell-padding:0px;
+	padding:0px;
+	margin:0px;
+}
+
+#personviewquicktbl button {
+	width:100%;
+	height:100%;
+	padding:0px;
+	margin:0px;
+	color:#eee;
+	margin-bottom:10px;
+}
 </style>
 <button id="personViewBackButton" ng-Click="goBack()">&lt; {{stageName}}</button>
+<br />
+<table id="personviewquicktbl">
+<tr>
+	<td ng-repeat="stage in stages"><button style="height:{{stageBoxHeight}}px; background-color:{{stage.stageColour}}" ng-Click="viewStage(stage.stageId)"><span style="font-size:2em;">{{stage.count}}</span><br/>{{stage.stageName}}</button></td>
+</tr>
+</table>
 <div id="personDetails">
 
-<h3>{{client.fields[0]}} <span style="float:right;"><select ng-Model="client.stageId">
+<h3>{{client.fields[0]}} <span style="float:right;"><select ng-Model="client.stageId" ng-Change="refreshStageCount()">
 <option ng-Repeat="stage in stages" value="{{stage.stageId}}" ng-Selected="client.stageId == stage.stageId">{{stage.stageName}}</option>
 </select></span></h3>
 

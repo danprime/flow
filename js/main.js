@@ -264,6 +264,16 @@ function personViewCtrl($scope, $location, dataServices) {
 	//Get the first (only one) - ideally should be a filter?
 	$scope.client = _.where( $scope.crm, {id:$scope.currentBoxId})[0];
 	
+	$scope.refreshStageCount = function ()
+	{
+		angular.forEach($scope.stages, function(stage, key){
+			
+			crms = _.where( $scope.flow.pipeline.crm, {stageId:stage.stageId});
+			stage.count = crms.length;
+		});
+		
+		dataServices.save($scope.pipelines);
+	}
 	
 	$scope.goBack = function()
 	{
@@ -295,6 +305,13 @@ function personViewCtrl($scope, $location, dataServices) {
 		$scope.deleteBoxConfirm = true;
 		$scope.potentialBox =$scope.client;
 		
+	}
+	
+	$scope.viewStage = function(stageid)
+	{
+		dataServices.save($scope.pipelines);
+		dataServices.setCurrentStageId(stageid);
+		$location.path('/stageview/' + stageid);
 	}
 	
 	$scope.save = function()
