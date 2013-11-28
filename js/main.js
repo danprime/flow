@@ -105,7 +105,7 @@ app.factory('dataServices', function(){
 		save: function(flows)
 		{	
 			myFlows = flows;
-			//localStorage.setItem("flows", JSON.stringify(myFlows));
+			localStorage.setItem("flows", JSON.stringify(myFlows));
 		},
 		setCurrentFlowIndex: function(flowIndex)
 		{
