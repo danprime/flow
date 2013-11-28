@@ -267,15 +267,30 @@ function personViewCtrl($scope, $location, dataServices) {
 		$location.path('/stageview/' + $scope.selectedStageId);
 	}
 	
-	$scope.deleteClient = function()
-	{	
-		var targetIndex = $scope.crm.indexOf($scope.client);
+	$scope.confirmBoxDelete = function()
+	{
+
+		var targetIndex = $scope.crm.indexOf($scope.potentialBox);
 		if (targetIndex != -1)
 		{
 			$scope.crm.splice(targetIndex, 1);
 		}
 		dataServices.save($scope.pipelines);
+		$scope.deleteBoxConfirm = false;
+		dataServices.save($scope.pipelines);
 		$scope.goBack();
+	}
+	
+	$scope.cancelBoxDelete = function()
+	{
+		$scope.deleteBoxConfirm = false;
+	}
+	
+	$scope.deleteClient = function()
+	{	
+		$scope.deleteBoxConfirm = true;
+		$scope.potentialBox =$scope.client;
+		
 	}
 	
 	$scope.save = function()
@@ -291,6 +306,13 @@ function settingsCtrl($scope, $location, dataServices, idservice) {
 	$scope.pipelines = dataServices.load();
 	
 	$scope.selectedPipeline = $scope.pipelines[dataServices.getCurrentFlowIndex()];
+	
+	$scope.deleteStageConfirm = "false";
+	$scope.potentialStage;
+	$scope.deleteFieldConfirm = "false";
+	$scope.potentialField;
+	$scope.deleteFlowConfirm = "false";
+	$scope.potential;
 	
 	//DOC: If nothing is selected, select the first one.
 	if ($scope.selectedPipeline == null)
@@ -365,16 +387,28 @@ function settingsCtrl($scope, $location, dataServices, idservice) {
 		dataServices.save($scope.pipelines);
 	}
 
-	
-	$scope.deleteStage = function(stage)
+	$scope.confirmStageDelete = function()
 	{
-		var targetIndex = $scope.currentPipeline.pipeline.stages.indexOf(stage);
+		var targetIndex = $scope.currentPipeline.pipeline.stages.indexOf($scope.potentialStage);
 		if (targetIndex != -1)
 		{
 			$scope.currentPipeline.pipeline.stages.splice(targetIndex, 1);
 		}
 		
 		dataServices.save($scope.pipelines);
+		$scope.deleteStageConfirm = false;
+	}
+	
+	$scope.cancelStageDelete = function()
+	{
+		$scope.deleteStageConfirm = false;
+	}
+	
+	$scope.deleteStage = function(stage)
+	{
+		$scope.deleteStageConfirm = true;
+		$scope.potentialStage = stage;
+		
 	}
 	
 	$scope.createNewFlow = function(newFlowName)
@@ -415,15 +449,29 @@ function settingsCtrl($scope, $location, dataServices, idservice) {
 		
 		dataServices.save($scope.pipelines);
 	}
-	$scope.removeField = function(targetField)
+	
+	$scope.confirmFieldDelete = function()
 	{
-		var targetIndex = $scope.currentPipeline.pipeline.fields.indexOf(targetField);
+
+		var targetIndex = $scope.currentPipeline.pipeline.fields.indexOf($scope.potentialField);
 		if (targetIndex != -1)
 		{
 			$scope.currentPipeline.pipeline.fields.splice(targetIndex, 1);
 		}
 		
 		dataServices.save($scope.pipelines);
+		$scope.deleteFieldConfirm = false;
+	}
+	
+	$scope.cancelFieldDelete = function()
+	{
+		$scope.deleteFieldConfirm = false;
+	}
+	
+	$scope.removeField = function(targetField)
+	{
+		$scope.deleteFieldConfirm = true;
+		$scope.potentialField = targetField;
 	}
 	
 	$scope.gotoStages = function()
@@ -432,22 +480,36 @@ function settingsCtrl($scope, $location, dataServices, idservice) {
 		$location.path('/stages');
 	}
 	
+	$scope.confirmFlowDelete = function()
+	{
+		var targetIndex = $scope.pipelines.indexOf($scope.potentialFlow);
+		if (targetIndex != -1)
+		{
+			$scope.pipelines.splice(targetIndex, 1);
+			
+			$scope.selectedPipeline = $scope.pipelines[0];
+			$scope.switchPipeline();
+			
+		}
+		$scope.deleteFlowConfirm = false;
+		dataServices.save($scope.pipelines);
+	}
+	
+	$scope.cancelFlowDelete = function()
+	{
+		$scope.deleteFlowConfirm = false;
+	}
+	
 	$scope.deleteFlow = function()
 	{
 		if ($scope.currentPipeline == $scope.selectedPipeline)
 		{
-			var targetIndex = $scope.pipelines.indexOf($scope.currentPipeline);
-			if (targetIndex != -1)
-			{
-				$scope.pipelines.splice(targetIndex, 1);
-				
-				$scope.selectedPipeline = $scope.pipelines[0];
-				$scope.switchPipeline();
-				
-			}
+			$scope.deleteFlowConfirm = true;
+			$scope.potentialFlow = $scope.currentPipeline;
+			
 		}
 		
-		dataServices.save($scope.pipelines);
+		
 	}
 	
 	$scope.save = function()

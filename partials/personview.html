@@ -37,5 +37,9 @@
 
 </div>
 <div style="bottom:0px;position:fixed;">
-<button id="clientDelete" ng-Click="confirm('Are you absolutely sure you want to delete?')"><img src="images/delete_icon&16.png"> Delete</button>
+<div ng-Show="deleteBoxConfirm">
+Are you sure you want to delete?<br />
+<button ng-Click="confirmBoxDelete()">Yes</button><button ng-Click="cancelBoxDelete()">No</button>
+</div>
+<button id="clientDelete" ng-Click="deleteClient()"><img src="images/delete_icon&16.png"> Delete</button>
 </div>
