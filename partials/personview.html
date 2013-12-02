@@ -33,8 +33,17 @@
 #personDetails {
  margin-left:0.5em;
  margin-right:0.5em;
+ padding-bottom:60px;
 }
 
+.contentHolder {
+	border:2px solid;
+	border-radius:2px;
+   box-shadow: 3px 3px 2px #888888;
+   margin-right:0.25em;
+   margin-top:0.2em;
+   display:block-inline;
+}
 </style>
 <button id="personViewBackButton" ng-Click="goBack()">&lt; {{stageName}}</button>
 <br />
@@ -43,6 +52,7 @@
 	<td ng-repeat="stage in stages"><button style="height:{{stageBoxHeight}}px; background-color:{{stage.stageColour}}" ng-Click="viewStage(stage.stageId)"><span style="font-size:2em;">{{stage.count}}</span><br/>{{stage.stageName}}</button></td>
 </tr>
 </table>
+
 <div id="personDetails">
 
 <h3>{{client.fields[0]}} <span style="float:right;"><select ng-Model="client.stageId" ng-Change="refreshStageCount()">
@@ -66,8 +76,23 @@
 <span ng-Hide="client.editNote" ng-Click="client.editNote=true;">{{client.notes}}</span>
 <span ng-Show="client.editNote"><textarea id="clientNotesTextArea" ng-Model="client.notes" ng-Blur="client.editNote = false;"/></textarea></span>
 
+<br />
+<br />
+<hr />
+<strong>Files</strong><br />
+<div ng-Show="deleteFileConfirm">
+Are you sure you want to unlink?<br />
+<button ng-Click="confirmFileDelete()">Yes</button><button ng-Click="cancelFileDelete()">No</button>
 </div>
-<div style="bottom:0px;position:fixed;">
+<span ng-Repeat="lContent in linkedContent" class="contentHolder">
+<span ng-Click="openLContent(lContent)"><img src="images/eye_icon&16.png">&nbsp;{{lContent.title}}&nbsp;</span>
+<span ng-Click="unlink(lContent)"><img src="images/delete_icon&16.png"></span>
+</span>
+<br /><br /><button ng-Click ="addFileClick()"><img src="images/link_icon&16.png"> Link New File...</button>
+
+
+</div>
+<div style="bottom:0px;">
 <div ng-Show="deleteBoxConfirm">
 Are you sure you want to delete?<br />
 <button ng-Click="confirmBoxDelete()">Yes</button><button ng-Click="cancelBoxDelete()">No</button>

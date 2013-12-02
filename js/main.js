@@ -1,5 +1,7 @@
 //Initialize function
 var screen = 0;
+var contentManager = tizen.content;
+var previousBoxId = 0;
 var init = function () {
     // TODO:: Do your initialization job
 	
@@ -16,6 +18,9 @@ var init = function () {
         			window.location.href = "#/stages";
         		case 3:
         			window.location.href = "#/stages";
+        			break;
+        		case 4:
+        			window.location.href = "#/personview/"+previousBoxId;
         			break;
         		default:
         			tizen.application.getCurrentApplication().exit();
@@ -54,6 +59,35 @@ app.factory('idservice', function() {
 		gen: function()
 		{
 			return s4() + s4() + '-' + s4();
+		}
+	}
+	
+});
+
+app.factory('linkedContentServices', function() {
+	var directories = new Array();
+	var currentDirectoryListing = new Array();
+	
+	return {
+		getDirectories: function()
+		{
+			return directories;
+			
+		},
+		setDirectories: function(newDirectoryListing)
+		{
+			directories = newDirectoryListing;
+		},
+		contentGetDirectorySuccess: function(directories)
+		{
+			directories = new Array();
+			angular.forEach(directories, function(directory, key){
+				directories.push(directory);
+			});
+		},
+		getDirectoryListing: function(directoryId)
+		{
+			
 		}
 	}
 	
@@ -141,6 +175,7 @@ app.config(['$routeProvider', function($routeProvider) {
 	  $routeProvider.when('/stageview/:stageid', {templateUrl: 'partials/stageview.html', controller: 'stageViewCtrl'});
 	  $routeProvider.when('/personview/:personid', {templateUrl: 'partials/personview.html', controller: 'personViewCtrl'});
 	  $routeProvider.when('/settings', {templateUrl: 'partials/settings.html', controller: 'settingsCtrl'});
+	  $routeProvider.when('/filePicker', {templateUrl: 'partials/filePicker.html', controller: 'filePickerCtrl'});
 	  $routeProvider.otherwise({redirectTo: '/stages'});
 	}]);
 
@@ -248,7 +283,7 @@ function stageViewCtrl($scope, $location, dataServices, idservice) {
 	}
 }
 
-function personViewCtrl($scope, $location, dataServices) {
+function personViewCtrl($scope, $location, dataServices, linkedContentServices) {
 	screen = 2;
 	$scope.selectedStageId = dataServices.getCurrentStageId();
 	$scope.pipelines = dataServices.load();	
@@ -257,12 +292,23 @@ function personViewCtrl($scope, $location, dataServices) {
 	$scope.fields = $scope.flow.pipeline.fields;
 	$scope.crm = $scope.flow.pipeline.crm;
 	$scope.currentBoxId = dataServices.getCurrentBoxId();
+	$scope.possibleContent = new Array();
+	$scope.directoryListing = new Array();
 	
 	$scope.stageName = _.where($scope.stages, {stageId:$scope.selectedStageId})[0].stageName
+	$scope.targetContent = new Array();
 	
+	$scope.deleteFileConfirm = false;
+	$scope.targetFile;
 	
 	//Get the first (only one) - ideally should be a filter?
 	$scope.client = _.where( $scope.crm, {id:$scope.currentBoxId})[0];
+	
+	if ($scope.client.linkedContent == null){
+		$scope.client.linkedContent = new Array();
+	}
+	
+	$scope.linkedContent = $scope.client.linkedContent;
 	
 	$scope.refreshStageCount = function ()
 	{
@@ -318,6 +364,62 @@ function personViewCtrl($scope, $location, dataServices) {
 	{
 		dataServices.save($scope.pipelines);
 	}
+	
+	$scope.addFileClick = function()
+	{
+		previousBoxId = $scope.currentBoxId;
+		$location.path('/filePicker');
+	}
+	
+//
+	$scope.confirmFileDelete = function()
+	{
+
+		var targetIndex = $scope.client.linkedContent.indexOf($scope.targetFile);
+		if (targetIndex == -1)
+		{
+			return ;
+		}
+		
+		$scope.client.linkedContent.splice(targetIndex, 1);
+		
+		dataServices.save($scope.pipelines);
+		$scope.deleteFileConfirm = false;
+	}
+	
+	$scope.cancelFileDelete = function()
+	{
+		$scope.deleteFileConfirm = false;
+	}
+	
+	$scope.unlink = function(lContent)
+	{	
+		$scope.targetFile = lContent;
+		$scope.deleteFileConfirm = true;
+	}
+	
+	$scope.openLContent = function (contentEntry)
+	{
+		//Get the URI and mime type
+		tizen.application.launchAppControl(new tizen.ApplicationControl(
+				'http://tizen.org/appcontrol/operation/view',
+				contentEntry.contentURI,
+				contentEntry.mimeType
+			),
+				null,
+				function () {
+					setTimeout(function () {
+						self.openFileUnLocked = true;
+					}, 500);
+				},
+				function (e) {
+					self.openFileUnLocked = true;
+					console.error('Service launch failed. Exception message:' + e.message);
+				},
+				null//serviceReplyCB
+				);
+	}
+	
 }
 
 function settingsCtrl($scope, $location, dataServices, idservice) {
@@ -579,4 +681,82 @@ function settingsCtrl($scope, $location, dataServices, idservice) {
 	{
 		dataServices.save($scope.pipelines);
 	}
+}
+
+function filePickerCtrl($scope,  dataServices, linkedContentServices)
+{
+	$scope.selectedStageId = dataServices.getCurrentStageId();
+	$scope.pipelines = dataServices.load();	
+	$scope.flow = $scope.pipelines[dataServices.getCurrentFlowIndex()];
+	$scope.stages = $scope.flow.pipeline.stages;
+	$scope.fields = $scope.flow.pipeline.fields;
+	$scope.crm = $scope.flow.pipeline.crm;
+	$scope.currentBoxId = dataServices.getCurrentBoxId();	
+	
+	$scope.targetContent = new Array();
+	
+	//Get the first (only one) - ideally should be a filter?
+	$scope.client = _.where( $scope.crm, {id:$scope.currentBoxId})[0];
+	
+	if ($scope.client.linkedContent == null){
+		$scope.client.linkedContent = new Array();
+	}
+	
+	$scope.possibleContent = new Array();
+	$scope.directoryListing = new Array();
+	$scope.targetContentDirectory = new Object();
+	$scope.linkedContent = new Array();
+	
+	
+	$scope.errorCallback = function(err)
+	{
+		console.log(err);
+	}
+	
+	$scope.contentGetDirectorySuccess = function(directories)
+	{	
+		$scope.directoryListing = new Array();
+		angular.forEach(directories, function(directory, key){
+			
+			$scope.directoryListing.push(directory);
+		});
+		
+		$scope.$apply();
+	}
+	
+	$scope.openDirectory = function()
+	{
+		contentManager.find($scope.contentArraySuccessCallback, null, $scope.targetContentDirectory.id);
+	}
+	
+	$scope.contentArraySuccessCallback = function(contents)
+	{
+		$scope.possibleContent = new Array();
+		angular.forEach(contents, function(contentEntry, key){
+			
+			$scope.possibleContent.push(contentEntry);
+		});
+		
+		$scope.$apply();
+	}
+	
+	$scope.linkEntry = function(tContent)
+	{	
+		$scope.client.linkedContent.push(tContent);
+		dataServices.save($scope.pipelines);
+		
+		$scope.goBack();
+	}
+	
+	$scope.goBack = function()
+	{
+		window.location.href = "#/personview/"+previousBoxId;
+	}
+	
+	if (($scope.directoryListing == null) || ($scope.directoryListing.length == 0))
+	{
+		//Call refresh of directory.
+		contentManager.getDirectories($scope.contentGetDirectorySuccess, $scope.errorCallback);
+	}
+	
 }

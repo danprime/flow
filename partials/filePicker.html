@@ -1,0 +1,11 @@
+<h2>File Linker</h2>
+<strong>1. Select Directory</strong>
+<select ng-Change="openDirectory()" ng-Model="targetContentDirectory.id">
+<option ng-Repeat="contentEntry in directoryListing" value="{{contentEntry.id}}">{{contentEntry.title}}</option>
+</select><br />
+<strong>2. Select File</strong>
+<table>
+<tr ng-Repeat="contentEntry in possibleContent">
+<td>{{contentEntry.title}}</td><td><button ng-click="linkEntry(contentEntry)">Link &gt;</button></td>
+</tr>
+</table>
