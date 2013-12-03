@@ -1,10 +1,18 @@
+<style type="text/css">
+#filepickerviewquicktbl {
+	border:1px;
+	width:100%;
+}
+</style>
 <h2>File Linker</h2>
-<strong>1. Select Directory</strong>
+<p>Links an existing file (Image, Sound, Video, other) from your device to the box for easy reference.</p>
+<strong>Select Directory</strong>
 <select ng-Change="openDirectory()" ng-Model="targetContentDirectory.id">
 <option ng-Repeat="contentEntry in directoryListing" value="{{contentEntry.id}}">{{contentEntry.title}}</option>
 </select><br />
-<strong>2. Select File</strong>
-<table>
+<br />
+<strong ng-Show="possibleContent.length">Select File</strong>
+<table id="filepickerviewquicktbl">
 <tr ng-Repeat="contentEntry in possibleContent">
 <td>{{contentEntry.title}}</td><td><button ng-click="linkEntry(contentEntry)">Link &gt;</button></td>
 </tr>

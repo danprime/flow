@@ -41,7 +41,7 @@
 	border-radius:2px;
    box-shadow: 3px 3px 2px #888888;
    margin-right:0.25em;
-   margin-top:0.2em;
+   margin-top:0.5em;
    display:block-inline;
 }
 </style>
@@ -79,7 +79,7 @@
 <br />
 <br />
 <hr />
-<strong>Files</strong><br />
+<strong>Files</strong> <button style="float:right;"ng-Click ="addFileClick()"><img src="images/link_icon&16.png"> Link File...</button><br />
 <div ng-Show="deleteFileConfirm">
 Are you sure you want to unlink?<br />
 <button ng-Click="confirmFileDelete()">Yes</button><button ng-Click="cancelFileDelete()">No</button>
@@ -88,7 +88,7 @@ Are you sure you want to unlink?<br />
 <span ng-Click="openLContent(lContent)"><img src="images/eye_icon&16.png">&nbsp;{{lContent.title}}&nbsp;</span>
 <span ng-Click="unlink(lContent)"><img src="images/delete_icon&16.png"></span>
 </span>
-<br /><br /><button ng-Click ="addFileClick()"><img src="images/link_icon&16.png"> Link New File...</button>
+<br /><br />
 
 
 </div>

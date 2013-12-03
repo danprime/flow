@@ -98,7 +98,7 @@ app.factory('dataServices', function(){
 	    "stages":[{"stageId":"1", "stageName":"Lead", "stageColour":"teal"}, {"stageId":"2", "stageName":"Contacted", "stageColour":"orange"}, {"stageId":"3", "stageName":"Pitched", "stageColour":"red"}, {"stageId":"4", "stageName":"Sold", "stageColour":"green"}],
         "fields":[{"fieldName":"Name", "fieldType":"text", "display":"yes"}, 
                     {"fieldName":"Amount", "fieldType":"number", "display":"yes"}
-                    ,{"fieldName":"Notes", "fieldType":"text", "display":"no"}],
+                    ,{"fieldName":"Description", "fieldType":"text", "display":"no"}],
         "crm":[{"id":"1", "fields":["Joe","100",""], "stageId":"1"},{"id":"2", "fields":["Jane","200",""], "stageId":"1"}]}}
 ,{"name":"Event", "id":"2", "pipeline":{
     "stages":[{"stageId":"1", "stageName":"Working", "stageColour":"teal"}, {"stageId":"2", "stageName":"Finalized", "stageColour":"orange"}, {"stageId":"3", "stageName":"Booked", "stageColour":"red"}, {"stageId":"4", "stageName":"Paid For", "stageColour":"green"}],
