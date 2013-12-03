@@ -17,7 +17,7 @@
 	color:#eee;
 }
 </style>
-<strong style="font-size:2em;">{{flow.name}}</strong>
+<!-- <strong style="font-size:2em;">{{flow.name}}</strong>-->
 <table id="stagestbl">
 <tr ng-repeat="stage in stages" height="{{stageBoxHeight}}"><td><button style="height:{{stageBoxHeight}}px; background-color:{{stage.stageColour}}" ng-Click="viewStage(stage.stageId)"><span style="font-size:2em;">{{stage.count}}</span><br/>{{stage.stageName}}</button></td></tr>
 </table>

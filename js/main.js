@@ -123,6 +123,8 @@ app.factory('dataServices', function(){
 	var currentStageId;
 	var currentBoxId;
 	
+	var observerCallbacks = [];
+	
 	return {
 		init: function()
 		{
@@ -165,7 +167,16 @@ app.factory('dataServices', function(){
 		getCurrentBoxId: function()
 		{
 			return currentBoxId;
-		}
+		},
+		registerObserverCallback: function(callback){
+		    observerCallbacks.push(callback);
+		},
+		notifyObservers: function(){
+		    angular.forEach(observerCallbacks, function(callback){
+		        callback();
+		      });
+		    }
+
 	}
 });
 
@@ -179,6 +190,24 @@ app.config(['$routeProvider', function($routeProvider) {
 	  $routeProvider.otherwise({redirectTo: '/stages'});
 	}]);
 
+function navController($scope, dataServices) {
+	$scope.title;
+	$scope.pipelines = dataServices.load();
+	$scope.flow = $scope.pipelines[dataServices.getCurrentFlowIndex()];
+	
+	$scope.title = $scope.flow.name;
+	
+	$scope.update = function()
+	{
+		$scope.pipelines = dataServices.load();
+		$scope.flow = $scope.pipelines[dataServices.getCurrentFlowIndex()];
+		
+		$scope.title = $scope.flow.name;
+	}
+	
+	dataServices.registerObserverCallback($scope.update);
+}
+
 function stagesCtrl($scope, $location, dataServices) {
 	
 	dataServices.init();
@@ -189,7 +218,7 @@ function stagesCtrl($scope, $location, dataServices) {
 	
 	$scope.stages = $scope.flow.pipeline.stages;
 	
-	$scope.stageBoxHeight = (window.innerHeight - 100) / $scope.stages.length;
+	$scope.stageBoxHeight = (window.innerHeight - 53) / $scope.stages.length;
 	
 	angular.forEach($scope.stages, function(stage, key){
 		
@@ -460,6 +489,7 @@ function settingsCtrl($scope, $location, dataServices, idservice) {
 			$scope.currentPipeline = $scope.selectedPipeline;
 		}
 		
+		dataServices.notifyObservers();
 		dataServices.save($scope.pipelines);
 	}
 	

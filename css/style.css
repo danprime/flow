@@ -11,8 +11,25 @@
     font-family: 'TizenSansRegular';
 }
 
+/*
+rgb(0,0,0) -black
+rgb(30,30,30) -dark grey
+rgb(17,19,27) -grey
+rgb(29,38,60) -greyblue
+rgb(49,63,102) -darkblue
+rgb(70,76,94) -darkgreyblue
+rgb(93,131,255) -light-blue
+rgb(43,58,175) -blue
+rgb(200,200,200) -lightgrey
+rgb(250,250,250) -white
+rgb(104,177,7) -green
+rgb(203,0,0) - red
+*/
+
 body {
+	background-color:black;
     margin: 0px auto;
+    color:rgb(230,230,230);
 }
 
 header h1 {

@@ -45,14 +45,11 @@
    display:block-inline;
 }
 </style>
-<button id="personViewBackButton" ng-Click="goBack()">&lt; {{stageName}}</button>
-<br />
 <table id="personviewquicktbl">
 <tr>
 	<td ng-repeat="stage in stages"><button style="height:{{stageBoxHeight}}px; background-color:{{stage.stageColour}}" ng-Click="viewStage(stage.stageId)"><span style="font-size:2em;">{{stage.count}}</span><br/>{{stage.stageName}}</button></td>
 </tr>
 </table>
-
 <div id="personDetails">
 
 <h3>{{client.fields[0]}} <span style="float:right;"><select ng-Model="client.stageId" ng-Change="refreshStageCount()">

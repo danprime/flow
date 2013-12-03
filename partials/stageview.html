@@ -4,10 +4,10 @@
     border-collapse:collapse;
 }
 #stageview td{
-	border:1px solid black;
+	border:1px solid rgb(230,230,230);
 }
 #stageview th{
-	border:1px solid black;
+	border:1px solid rgb(230,230,230);
 }
 #stagesviewquicktbl {
 	border:0px;width:100%;
@@ -38,16 +38,11 @@
 	width:0.5em;
 }
 </style>
-
-<button id="stageViewBackButton" ng-Click="gotoStages()">&lt; {{flow.name}}</button>
-<br />
 <table id="stagesviewquicktbl">
 <tr>
 	<td ng-repeat="stage in stages"><button style="height:{{stageBoxHeight}}px; background-color:{{stage.stageColour}}" ng-Click="viewStage(stage.stageId)"><span style="font-size:2em;">{{stage.count}}</span><br/>{{stage.stageName}}</button></td>
 </tr>
 </table>
-<br />
-
 <table id="stageview" width="100%">
 <tr><th>Stage</th>
 <th ng-Repeat="field in fields | filter:{display:'yes'}">
@@ -60,7 +55,7 @@
 
 <tr ng-Repeat="client in crm | filter:{stageId : selectedStageId}">
 <td>
-<select ng-Model="client.stageId" ng-Change="refreshStageCount()">
+<select ng-Model="client.stageId" ng-Change="refreshStageCount()" style="width:100%;">
 <option ng-Repeat="stage in stages" value="{{stage.stageId}}" ng-Selected="client.stageId == stage.stageId">{{stage.stageName}}</option>
 </select>
 </td>
@@ -71,9 +66,11 @@
 <hr />
 <form name="newBoxForm">
 <strong>New...</strong>
+<div id="newBoxForm">
 <div ng-Repeat="field in fields">
 <label>{{field.fieldName}}</label>
 <input type="{{field.fieldType}}" ng-Model="newFields[$index]">
 </div>
 <button ng-Click="addClient()" style="background-image:url('images/sq_plus_icon&24.png');height:2.3em;width:2.2em;background-repeat:no-repeat;"></button>
 </form>
+</div>

@@ -1,10 +1,5 @@
-<H2>Setup</H2>
-
-
 Switch Flow
 <select ng-Model="selectedPipeline" ng-Change="switchPipeline()" ng-Options="p.name for p in pipelines"></select><button ng-Click="gotoStages()">Go</button>
-
-<br />
 <hr />
 <h3>Current Flow</h3>
 <label>Rename <input type="text" id="currentFlowName" ng-Model="newNameForCurrentFlow"></label><button ng-Click="changeFlowName(newNameForCurrentFlow)">Change</button>
