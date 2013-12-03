@@ -43,6 +43,7 @@
    margin-right:0.25em;
    margin-top:0.5em;
    display:block-inline;
+   background-color:rgb(30,30,30);
 }
 </style>
 <table id="personviewquicktbl">
@@ -52,9 +53,11 @@
 </table>
 <div id="personDetails">
 
+<div style="height:2em;">
 <h3>{{client.fields[0]}} <span style="float:right;"><select ng-Model="client.stageId" ng-Change="refreshStageCount()">
 <option ng-Repeat="stage in stages" value="{{stage.stageId}}" ng-Selected="client.stageId == stage.stageId">{{stage.stageName}}</option>
 </select></span></h3>
+</div>
 
 <strong>Details</strong><br />
 <table id="tbldetails">
@@ -76,14 +79,15 @@
 <br />
 <br />
 <hr />
-<strong>Files</strong> <button style="float:right;"ng-Click ="addFileClick()"><img src="images/link_icon&16.png"> Link File...</button><br />
+<div ng-Show="(client.id != -99)">
+<strong>Files</strong> <button style="float:right;"ng-Click ="addFileClick()"><img src="images/link_icon&16.png"> Link File...</button><br /></div>
 <div ng-Show="deleteFileConfirm">
 Are you sure you want to unlink?<br />
 <button ng-Click="confirmFileDelete()">Yes</button><button ng-Click="cancelFileDelete()">No</button>
 </div>
 <span ng-Repeat="lContent in linkedContent" class="contentHolder">
 <span ng-Click="openLContent(lContent)"><img src="images/eye_icon&16.png">&nbsp;{{lContent.title}}&nbsp;</span>
-<span ng-Click="unlink(lContent)"><img src="images/delete_icon&16.png"></span>
+<span ng-Click="unlink(lContent)"><img src="images/round_delete_icon&16.png"></span>
 </span>
 <br /><br />
 
@@ -94,5 +98,10 @@ Are you sure you want to unlink?<br />
 Are you sure you want to delete?<br />
 <button ng-Click="confirmBoxDelete()">Yes</button><button ng-Click="cancelBoxDelete()">No</button>
 </div>
+<div ng-Show="(client.id != -99)">
 <button id="clientDelete" ng-Click="deleteClient()"><img src="images/delete_icon&16.png"> Delete</button>
+</div>
+<div ng-Hide="(client.id != -99)">
+<button ng-Click="cancelAddNewBox()">Cancel</button><button style="float:right;"ng-Click="addNewBox()">Add</button>
+</div>
 </div>

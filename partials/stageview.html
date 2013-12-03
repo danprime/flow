@@ -64,13 +64,4 @@
 </tr>
 </table>
 <hr />
-<form name="newBoxForm">
-<strong>New...</strong>
-<div id="newBoxForm">
-<div ng-Repeat="field in fields">
-<label>{{field.fieldName}}</label>
-<input type="{{field.fieldType}}" ng-Model="newFields[$index]">
-</div>
-<button ng-Click="addClient()" style="background-image:url('images/sq_plus_icon&24.png');height:2.3em;width:2.2em;background-repeat:no-repeat;"></button>
-</form>
-</div>
+<button ng-Click="addBox(-99)">New...</button>

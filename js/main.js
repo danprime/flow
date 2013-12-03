@@ -281,6 +281,13 @@ function stageViewCtrl($scope, $location, dataServices, idservice) {
 		$location.path('/personview/' + boxID);
 	}
 	
+	$scope.addBox = function()
+	{
+		dataServices.save($scope.pipelines);
+		dataServices.setCurrentBoxId(-99);
+		$location.path('/personview/-99');
+	}
+	
 	$scope.viewStage = function(stageid)
 	{
 		dataServices.save($scope.pipelines);
@@ -293,26 +300,9 @@ function stageViewCtrl($scope, $location, dataServices, idservice) {
 		dataServices.save($scope.pipelines);
 		$location.path('/stages');
 	}
-	
-	$scope.addClient = function()
-	{
-		if (($scope.newFields[0] == null) || ($scope.newFields[0].trim().length == 0))
-		{
-			return;
-		}
-		var newBox = new Object();
-		newBox.id = idservice.gen();
-		newBox.stageId = angular.copy($scope.selectedStageId);
-		newBox.fields = $scope.newFields;
-		
-		$scope.crm.push(newBox);
-		dataServices.save($scope.pipelines);
-		$scope.newFields = "";
-		$scope.refreshStageCount();
-	}
 }
 
-function personViewCtrl($scope, $location, dataServices, linkedContentServices) {
+function personViewCtrl($scope, $location, dataServices, linkedContentServices, idservice) {
 	screen = 2;
 	$scope.selectedStageId = dataServices.getCurrentStageId();
 	$scope.pipelines = dataServices.load();	
@@ -330,8 +320,21 @@ function personViewCtrl($scope, $location, dataServices, linkedContentServices) 
 	$scope.deleteFileConfirm = false;
 	$scope.targetFile;
 	
-	//Get the first (only one) - ideally should be a filter?
-	$scope.client = _.where( $scope.crm, {id:$scope.currentBoxId})[0];
+	if ($scope.currentBoxId == -99)
+	{
+		$scope.client = new Object();
+		$scope.client.id = -99;
+		$scope.client.fields = new Array($scope.fields.length);		
+		$scope.client.stageId =$scope.selectedStageId;
+	}
+	else if ($scope.currentBoxId != -99)
+	{
+	
+		//Get the first (only one) - ideally should be a filter?
+		$scope.client = _.where( $scope.crm, {id:$scope.currentBoxId})[0];
+	
+		
+	}
 	
 	if ($scope.client.linkedContent == null){
 		$scope.client.linkedContent = new Array();
@@ -379,6 +382,24 @@ function personViewCtrl($scope, $location, dataServices, linkedContentServices) 
 	{	
 		$scope.deleteBoxConfirm = true;
 		$scope.potentialBox =$scope.client;
+		
+	}
+	
+	$scope.cancelAddNewBox = function()
+	{
+		$scope.goBack();
+	}
+	
+	$scope.addNewBox = function()
+	{
+		//Take the current box and add it to the list.		
+		$scope.client.id = idservice.gen();
+		$scope.currentBoxId = $scope.client.id; 
+		dataServices.setCurrentBoxId($scope.client.id);
+		$scope.crm.push($scope.client);
+		dataServices.save($scope.pipelines);
+		
+		$scope.refreshStageCount();
 		
 	}
 	
@@ -447,6 +468,23 @@ function personViewCtrl($scope, $location, dataServices, linkedContentServices) 
 				},
 				null//serviceReplyCB
 				);
+	}
+	
+	$scope.addClient = function()
+	{
+		if (($scope.newFields[0] == null) || ($scope.newFields[0].trim().length == 0))
+		{
+			return;
+		}
+		var newBox = new Object();
+		newBox.id = idservice.gen();
+		newBox.stageId = angular.copy($scope.selectedStageId);
+		newBox.fields = $scope.newFields;
+		
+		$scope.crm.push(newBox);
+		dataServices.save($scope.pipelines);
+		$scope.newFields = "";
+		$scope.refreshStageCount();
 	}
 	
 }
