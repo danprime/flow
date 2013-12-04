@@ -41,7 +41,7 @@ Are you sure you want to delete this field?<br />
 <button ng-Click="confirmFieldDelete()">Yes</button><button ng-Click="cancelFieldDelete()">No</button>
 </div>
 <table>
-<tr><td>Name</td><td>Type</td><td>Summarize</td></tr>
+<tr><td>Field Name</td><td>Type</td><td>Summarize</td></tr>
 <tr ng-Repeat="field in currentPipeline.pipeline.fields">
 	<td>
 		<span ng-Hide="field.editName" ng-Click="field.editName=true" >{{field.fieldName}}</span>

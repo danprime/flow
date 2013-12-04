@@ -248,10 +248,12 @@ function stageViewCtrl($scope, $location, dataServices, idservice) {
 	$scope.stages = $scope.flow.pipeline.stages;
 	$scope.fields = $scope.flow.pipeline.fields;
 	$scope.crm = $scope.flow.pipeline.crm;
-	
+		
 	$scope.newFields = new Array();
 		
 	$scope.visibleFieldIndexes = new Array();
+	
+	$scope.visibleFields = new Array();
 	
 	$scope.refreshStageCount = function ()
 	{
@@ -268,8 +270,9 @@ function stageViewCtrl($scope, $location, dataServices, idservice) {
 		if (field.display  == "yes")
 		{
 			$scope.visibleFieldIndexes.push(key);
+			$scope.visibleFields.push(field);
 		}
-	});
+	});	
 	
 	$scope.refreshStageCount();
 	
