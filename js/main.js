@@ -756,6 +756,7 @@ function settingsCtrl($scope, $location, dataServices, idservice) {
 
 function filePickerCtrl($scope,  dataServices, linkedContentServices)
 {
+	screen = 4;
 	$scope.selectedStageId = dataServices.getCurrentStageId();
 	$scope.pipelines = dataServices.load();	
 	$scope.flow = $scope.pipelines[dataServices.getCurrentFlowIndex()];
@@ -766,7 +767,7 @@ function filePickerCtrl($scope,  dataServices, linkedContentServices)
 	
 	$scope.targetContent = new Array();
 	
-	console.log("Trying to open box id" + $scope.currentBoxId);
+	//	console.log("Trying to open box id" + $scope.currentBoxId);
 	//Get the first (only one) - ideally should be a filter?
 	$scope.client = _.where( $scope.crm, {id:$scope.currentBoxId})[0];
 	
@@ -777,6 +778,7 @@ function filePickerCtrl($scope,  dataServices, linkedContentServices)
 	$scope.possibleContent = new Array();
 	$scope.directoryListing = new Array();
 	$scope.targetContentDirectory = new Object();
+	$scope.targetContentDirectory.id = new Object();
 	$scope.linkedContent = new Array();
 	
 	
@@ -790,9 +792,14 @@ function filePickerCtrl($scope,  dataServices, linkedContentServices)
 		$scope.directoryListing = new Array();
 		angular.forEach(directories, function(directory, key){
 			
-			$scope.directoryListing.push(directory);
-		});
+			if (directory != null){
+				$scope.directoryListing.push(directory);
+			}
+		});		
 		
+		
+		$scope.targetContentDirectory.id = $scope.directoryListing[0].id;
+		$scope.openDirectory();
 		$scope.$apply();
 	}
 	
@@ -809,7 +816,7 @@ function filePickerCtrl($scope,  dataServices, linkedContentServices)
 			$scope.possibleContent.push(contentEntry);
 		});
 		
-		$scope.$apply();
+		$scope.$apply();		
 	}
 	
 	$scope.linkEntry = function(tContent)
