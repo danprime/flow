@@ -403,7 +403,7 @@ function personViewCtrl($scope, $location, dataServices, linkedContentServices, 
 		dataServices.save($scope.pipelines);
 		
 		$scope.refreshStageCount();
-		
+		console.log("Saved...");
 	}
 	
 	$scope.viewStage = function(stageid)
@@ -766,6 +766,7 @@ function filePickerCtrl($scope,  dataServices, linkedContentServices)
 	
 	$scope.targetContent = new Array();
 	
+	console.log("Trying to open box id" + $scope.currentBoxId);
 	//Get the first (only one) - ideally should be a filter?
 	$scope.client = _.where( $scope.crm, {id:$scope.currentBoxId})[0];
 	

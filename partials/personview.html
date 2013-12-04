@@ -2,10 +2,19 @@
 #tbldetails {
 	border-spacing:0;
     border-collapse:collapse;
+    width:100%;
 }
 
 #tbldetails td{
-	
+	border:1px solid rgb(20,20,20);
+}
+
+.tdaction {
+	width:10%;
+}
+
+.tdlabel {
+	width:20%;
 }
 
 #clientNotesTextArea {
@@ -42,7 +51,7 @@
    box-shadow: 3px 3px 2px #888888;
    margin-right:0.25em;
    margin-top:0.5em;
-   display:block-inline;
+   display:inline-block;
    background-color:rgb(30,30,30);
 }
 </style>
@@ -62,8 +71,8 @@
 <strong>Details</strong><br />
 <table id="tbldetails">
 <tr ng-Repeat="field in fields">
-	<td><button ng-Click="field.edit=true;"><img src="images/doc_edit_icon&16.png"></button></td>
-	<td style="text-align:right;">{{field.fieldName}}: </td>
+	<td class="tdaction"><img ng-Click="field.edit=true;" src="images/edit.png"></td>
+	<td class="tdlabel" style="text-align:right;">{{field.fieldName}}: </td>
 	<td><span ng-Hide="field.edit" ng-Click="field.edit=true;">{{client.fields[$index]}}</span>
 	<span ng-Show="field.edit"><input type="{{field.fieldType}}" ng-Model="client.fields[$index]" ng-Blur="field.edit = false;"/></span>
 	</td>
@@ -72,7 +81,7 @@
 </table>
 
 <hr />
-<strong>Notes</strong><button ng-Click="client.editNote=true;"><img src="images/doc_edit_icon&24.png">Edit Note</button><br />
+<strong>Notes</strong><button ng-Click="client.editNote=true;"><img src="images/edit.png"> Edit Note</button><br />
 <span ng-Hide="client.editNote" ng-Click="client.editNote=true;">{{client.notes}}</span>
 <span ng-Show="client.editNote"><textarea id="clientNotesTextArea" ng-Model="client.notes" ng-Blur="client.editNote = false;"/></textarea></span>
 
@@ -99,9 +108,9 @@ Are you sure you want to delete?<br />
 <button ng-Click="confirmBoxDelete()">Yes</button><button ng-Click="cancelBoxDelete()">No</button>
 </div>
 <div ng-Show="(client.id != -99)">
-<button id="clientDelete" ng-Click="deleteClient()"><img src="images/delete_icon&16.png"> Delete</button>
+<button id="clientDelete" ng-Click="deleteClient()"><img src="images/delete.png" /> Delete</button>
 </div>
 <div ng-Hide="(client.id != -99)">
-<button ng-Click="cancelAddNewBox()">Cancel</button><button style="float:right;"ng-Click="addNewBox()">Add</button>
+<button ng-Click="cancelAddNewBox()">Cancel</button><button style="float:right;"ng-Click="addNewBox()"><img src="images/add.png" />Add</button>
 </div>
 </div>
