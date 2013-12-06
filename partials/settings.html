@@ -76,7 +76,8 @@ Are you sure you want to delete this field?<br />
 Are you sure you want to delete this flow?<br />
 <button ng-Click="confirmFlowDelete()">Yes</button><button ng-Click="cancelFlowDelete()">No</button>
 </div>
-<button ng-Click="deleteFlow()">Delete this Flow</button>
+<button ng-Click="backupToDisk()">Back Up Flows</button><span ng-Show="backedupStatus">{{backupMessage}}</span> <button style="float:right;" ng-Click="deleteFlow()">Delete this Flow</button>
 
 <hr />
+<br />
 <label>New Flow: <input type="text" id="newFlowName" ng-Model="newFlowName"></label><img ng-Click="createNewFlow()" src="images/add.png" /><br />

@@ -513,6 +513,8 @@ function settingsCtrl($scope, $location, dataServices, idservice) {
 	$scope.fields = $scope.selectedPipeline.pipeline.fields;
 	$scope.crm = $scope.selectedPipeline.pipeline.crm;
 	
+	$scope.documentsDir = "";
+	
 	//DOC: If nothing is selected, select the first one.
 	if ($scope.selectedPipeline == null)
 	{
@@ -742,16 +744,50 @@ function settingsCtrl($scope, $location, dataServices, idservice) {
 		{
 			$scope.deleteFlowConfirm = true;
 			$scope.potentialFlow = $scope.currentPipeline;
-			
 		}
-		
-		
 	}
 	
 	$scope.save = function()
 	{
 		dataServices.save($scope.pipelines);
 	}
+	
+	$scope.backupToDisk = function()
+	{	
+		try {
+			var timeStamp = new Date().getTime();
+			var targetFileName = "flow" + timeStamp.toString() + "backup.dat";
+			targetFile = $scope.documentsDir.createFile(targetFileName);
+			
+			
+			targetFile.openStream('w', $scope.writeFlowsToStream, null);
+		} catch(exception) {
+			console.log("can't resolve file " + exception.message);
+		}
+		
+		$scope.backedupStatus = true;
+		$scope.backupMessage = "Backed Up Successful. Saved in Documents Folder";
+	}
+	
+	$scope.writeFlowsToStream = function(fileStream) 
+	{
+		fileStream.write(JSON.stringify($scope.pipelines));
+		fileStream.close();	
+	}
+	
+	//Init
+	$scope.initDocumentsDirectory = function()
+	{
+		tizen.filesystem.resolve("documents", $scope.foundDocumentsDirectory, null, "rw");
+	}
+	
+	$scope.foundDocumentsDirectory = function(dir)
+	{
+		$scope.documentsDir = dir;
+	}
+	
+	$scope.initDocumentsDirectory();
+	
 }
 
 function filePickerCtrl($scope,  dataServices, linkedContentServices)
